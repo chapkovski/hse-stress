@@ -1,0 +1,27 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Результаты теста
+{% endblock %}
+
+{% block content %}
+    <table class="table table-hover table-striped">
+        <thead>
+        <th>Вопрос</th>
+        <th>Ваш ответ</th>
+        <th>Правильный ответ</th>
+        </thead>
+        {% for foo in player.get_correct_test_answers %}
+            <tr>
+                <td>{{ foo.label }}</td>
+                <td>{{ foo.res }}</td>
+                <td>{{ foo.correct_answer }}</td>
+            </tr>
+        {% endfor %}
+
+    </table>
+    {% formfields %}
+    {% next_button %}
+
+{% endblock %}
