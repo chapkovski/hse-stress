@@ -1,0 +1,20 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+Second stage announcement
+{% endblock %}
+
+{% block content %}
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Announcement</h5>
+            <div>
+                Here goes some text announcing there will be  a second set of tasks
+            </div>
+        </div>
+    </div>
+    {% next_button %}
+
+{% endblock %}

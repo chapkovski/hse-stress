@@ -1,0 +1,12 @@
+<style>
+    .item{
+        font-family: monospace;
+    }
+</style>
+{% for row in  data %}
+    <div class="item-row">
+        {% for i in  row %}
+            <span class="item"> {{ i }}</span>
+        {% endfor %}
+    </div>
+{% endfor %}

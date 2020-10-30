@@ -10,8 +10,14 @@ from otree.api import (
 )
 from .widgets import OtherRadioSelect
 import yaml
+from django.db import models as djmodels
+import logging
+import random
+from string import digits
+from django.template.loader import render_to_string
 
-author = 'Your name here'
+logger = logging.getLogger(__name__)
+author = 'Philip Chapkovski, HSE-Moscow'
 
 doc = """
 Your app description
@@ -19,18 +25,50 @@ Your app description
 
 
 class Constants(BaseConstants):
+    secs_for_first_tasks = 20
     name_in_url = 'quiz'
     players_per_group = None
     num_rounds = 1
     CHRONIC_CHOICES = ['никогда', 'почти никогда', 'иногда', 'довольно часто', 'часто']
+
+    num_tasks = dict(
+        Task1=10,
+        Task2=10,
+    )
+    task_len = 100
+    num_rows = 10
+
+    assert task_len % num_rows == 0
+
+    item_to_check = 7
     with open(r'./data/qs.yaml') as file:
         qs = yaml.load(file, Loader=yaml.FullLoader)
 
 
+def chunks(l, n):
+    """Yield n number of striped chunks from l."""
+    for i in range(0, n):
+        yield l[i::n]
+
+
 class Subsession(BaseSubsession):
+
     def creating_session(self):
+        sqs = []
         for p in self.get_players():
-            p.get_correct_test_answers()
+            for page, num_tasks in Constants.num_tasks.items():
+                for t in range(num_tasks):
+                    item_to_check = random.choice(digits)
+                    body = random.choices(digits, k=Constants.task_len)
+
+                    correct_answer = sum([1 for i in body if i == item_to_check])
+                    sqs.append(Task(owner=p, body=''.join(body),
+                                    page=page,
+                                    item_to_check=item_to_check,
+                                    correct_answer=correct_answer
+                                    ))
+
+        Task.objects.bulk_create(sqs)
 
 
 class Group(BaseGroup):
@@ -40,6 +78,52 @@ class Group(BaseGroup):
 class Player(BasePlayer):
     correct_tests = models.IntegerField()
     total_tests = models.IntegerField()
+
+    def _tasks_info(self):
+        page = self.participant._current_page_name
+        r = dict(cur=None, total=None)
+        tasks = self.tasks.filter(page=page)
+        if tasks.exists():
+            r['cur'] = tasks.filter(answer__isnull=False).count() + 1
+            r['total'] = tasks.count()
+        return r
+
+    def cur_task_num(self):
+        return self._tasks_info()['cur']
+
+    def total_tasks(self):
+        return self._tasks_info()['total']
+
+    def get_next_task(self, data):
+        logger.info(data)
+        qid = data.get('id')
+        answer = data.get('answer')
+        page = data.get('page', self.participant._current_page_name)
+        if answer and qid:
+            q = Task.objects.get(id=qid)
+            q.answer = answer
+            q.save()
+        next_q = self._next_task(page)
+        if next_q:
+            resp = dict(body=render_to_string('./quiz/components/matrix.html',
+                                              {'data': chunks(list(next_q.body), Constants.num_rows)}),
+                        item_to_check=next_q.item_to_check,
+                        id=next_q.id,
+                        cur_task_num=self.cur_task_num()
+                        )
+
+            r = {self.id_in_group: resp}
+            return r
+        return {self.id_in_group: dict(no_tasks_left=True)}
+
+    def _next_task(self, page):
+        """
+        Internal method to retrieve next tsk
+        """
+        unanswered = self.tasks.filter(answer__isnull=True, page=page)
+        if unanswered.exists():
+            q = unanswered.first()
+            return q
 
     def get_correct_test_answers(self):
         qs = Constants.qs
@@ -187,3 +271,26 @@ class Player(BasePlayer):
         label='Как часто за последний месяц вам казалось, что накопившиеся трудности достигли такого предела, что Вы не могли их контролировать?',
         choices=Constants.CHRONIC_CHOICES,
         widget=widgets.RadioSelect)
+
+
+class Task(djmodels.Model):
+    owner = djmodels.ForeignKey(to=Player, on_delete=djmodels.CASCADE, related_name="tasks")
+    body = models.StringField()
+    correct_answer = models.IntegerField()
+    item_to_check = models.IntegerField()
+    answer = models.IntegerField()
+    page = models.StringField()
+    under_threat = models.BooleanField()
+
+    @property
+    def is_correct(self):
+        return self.correct_answer == self.answer
+
+    def __str__(self):
+        return f'Task: "{self.body}" for participant {self.owner.participant.code}; correct answer {self.correct_answer}'
+
+
+def custom_export(players):
+    yield ['code', 'body', 'answer', 'correct_answer', 'item_to_check']
+    for q in Task.objects.order_by('id'):
+        yield [q.owner.participant.code, q.body, q.answer, q.correct_answer, q.item_to_check, ]

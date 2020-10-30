@@ -1,6 +1,6 @@
 from otree.api import Currency as c, currency_range
 from ._builtin import WaitPage
-from .generic_pages import Page
+from .generic_pages import Page,TaskPage
 from .models import Constants
 
 
@@ -17,7 +17,6 @@ class IntellAbility(Page):
         r = self.player.get_correct_test_answers()
         self.player.correct_tests = sum([1 for i in r if i.get('is_correct')])
         self.player.total_tests = len(r)
-
 
 
 class IntellAbilityResults(Page):
@@ -44,8 +43,16 @@ class IQ(Page):
     pass
 
 
-class Matrices(Page):
+class Task1(TaskPage):
     pass
+
+
+class SecondStageAnnouncement(Page):
+    pass
+
+
+class Task2(TaskPage):
+    template_name = 'quiz/Task1.html'
 
 
 class Results(Page):
@@ -55,13 +62,17 @@ class Results(Page):
 
 page_sequence = [
     # SocialEconomic,
-    IntellAbility,
-    IntellAbilityResults,
+    # IntellAbility,
+    # IntellAbilityResults,
     # AcuteStress,
     # IQ,
-    # Matrices,
+    Task1,
+    SecondStageAnnouncement,
+    Task2,
     # AcuteStress1,
     # ChronicStress,
     # ChronicStressResults,
     # Results,
 ]
+
+assert set(Constants.num_tasks.keys()).issubset(set([i.__name__ for i in page_sequence]))

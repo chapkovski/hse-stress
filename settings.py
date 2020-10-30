@@ -2,10 +2,25 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-       name='quiz',
-       display_name="My first cool experiment",
-       num_demo_participants=1,
-       app_sequence=['quiz']
+        name='baseline',
+        display_name="Baseline",
+        num_demo_participants=1,
+        app_sequence=['quiz']
+    ),
+    dict(
+        name='tp',
+        display_name="TP Treatment",
+        num_demo_participants=1,
+        app_sequence=['quiz'],
+        tp=True,
+    ),
+    dict(
+        name='stress',
+        display_name="TP+Stress treatment",
+        num_demo_participants=1,
+        app_sequence=['quiz'],
+        tp=True,
+        stress=True
     ),
 ]
 
