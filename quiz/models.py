@@ -38,6 +38,9 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
+    correct_tests = models.IntegerField()
+    total_tests = models.IntegerField()
+
     def get_correct_test_answers(self):
         qs = Constants.qs
         testqs = list(qs.keys())
@@ -59,7 +62,7 @@ class Player(BasePlayer):
                 print("FAIL")
         return r
 
-    age = models.IntegerField(min=18, max=101, label=' Сколько Вам лет?')
+    age = models.IntegerField(min=18, max=101, label=' Сколько Вам <b>лет</b>?')
     gender = models.StringField(label='Укажите Ваш пол?',
                                 widget=widgets.RadioSelect,
                                 choices=['Мужской', 'Женский'],
@@ -77,7 +80,7 @@ class Player(BasePlayer):
                                              'медицина', 'общественные науки', 'гуманитарные науки', 'искусство',
                                              'другое'],
                                     widget=OtherRadioSelect(other=('другое', 'education_other')))
-    education_other = models.StringField(label='')
+    education_other = models.StringField(label='', blank=True)
     birth = models.StringField(label='В какой стране и каком городе Вы родились?')
     game = models.StringField(
         label='Если я вовлечен в какую-либо игру, мне всегда хочется победить. Насколько Вы согласны с данным утверждением? '

@@ -1,5 +1,6 @@
 from otree.api import Currency as c, currency_range
-from ._builtin import Page, WaitPage
+from ._builtin import WaitPage
+from .generic_pages import Page
 from .models import Constants
 
 
@@ -11,6 +12,12 @@ class SocialEconomic(Page):
 class IntellAbility(Page):
     form_model = 'player'
     form_fields = ['test1', 'test2', 'test3', 'test4', 'test6', 'test8', 'test9', 'test10']
+
+    def before_next_page(self):
+        r = self.player.get_correct_test_answers()
+        self.player.correct_tests = sum([1 for i in r if i.get('is_correct')])
+        self.player.total_tests = len(r)
+
 
 
 class IntellAbilityResults(Page):
@@ -47,9 +54,9 @@ class Results(Page):
 
 
 page_sequence = [
-    SocialEconomic,
-    # IntellAbility,
-    # IntellAbilityResults,
+    # SocialEconomic,
+    IntellAbility,
+    IntellAbilityResults,
     # AcuteStress,
     # IQ,
     # Matrices,
