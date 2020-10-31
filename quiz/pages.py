@@ -46,8 +46,8 @@ class IQ(Page):
 
 
 class Task1(TaskPage):
-    max_time_for_tasks = 30
-    sec_before_end_warning = 2
+    max_time_for_tasks = 600
+    sec_before_end_warning = 120
 
     def get_max_time_for_tasks(self):
         return self.max_time_for_tasks
