@@ -114,6 +114,7 @@ class Player(BasePlayer):
             q.seconds_on_task = (q.post_time - q.get_time)
             q.num_seconds_on_task = q.seconds_on_task.total_seconds()
             q.answer = answer
+            q.is_correct = q.correct_answer == answer
             q.under_threat = getattr(self, f'show_threat_{page.lower()}')
             q.save()
         next_q = self._next_task(page)
@@ -301,18 +302,17 @@ class Task(djmodels.Model):
     get_time = djmodels.DateTimeField(null=True)
     seconds_on_task = djmodels.DurationField(null=True)
     num_seconds_on_task = models.FloatField()
-
-    @property
-    def is_correct(self):
-        return self.correct_answer == self.answer
+    is_correct = models.BooleanField()
 
     def __str__(self):
         return f'Task: "{self.body}" for participant {self.owner.participant.code}; correct answer {self.correct_answer}'
 
 
 def custom_export(players):
-    yield ['session', 'code', 'body', 'answer', 'correct_answer', 'item_to_check', 'page', 'under_threat',
+    yield ['session', 'code', 'body', 'answer', 'correct_answer', 'is_correct', 'item_to_check', 'page', 'under_threat',
            'get_time', 'post_time', 'sec_on_task', 'num_seconds_on_task']
     for q in Task.objects.order_by('id'):
-        yield [q.owner.session.code, q.owner.participant.code, q.body, q.answer, q.correct_answer, q.item_to_check,
+        yield [q.owner.session.code, q.owner.participant.code, q.body, q.answer, q.correct_answer,
+               q.is_correct,
+               q.item_to_check,
                q.page, q.under_threat, q.get_time, q.post_time, q.seconds_on_task, q.num_seconds_on_task]
