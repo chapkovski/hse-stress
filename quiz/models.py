@@ -15,6 +15,7 @@ import logging
 import random
 from string import digits
 from django.template.loader import render_to_string
+from datetime import datetime, timezone, timedelta
 
 logger = logging.getLogger(__name__)
 author = 'Philip Chapkovski, HSE-Moscow'
@@ -30,19 +31,17 @@ class Constants(BaseConstants):
     players_per_group = None
     num_rounds = 1
     CHRONIC_CHOICES = ['никогда', 'почти никогда', 'иногда', 'довольно часто', 'часто']
-
+    time_pressure_coef = 0.65
     num_tasks = dict(
         Task1=10,
         Task2=10,
     )
     task_len = 100
     num_rows = 10
-
     assert task_len % num_rows == 0
-
-    item_to_check = 7
     with open(r'./data/qs.yaml') as file:
         qs = yaml.load(file, Loader=yaml.FullLoader)
+    stress_msg = 'Please hurry up!!!!'
 
 
 def chunks(l, n):
@@ -78,6 +77,10 @@ class Group(BaseGroup):
 class Player(BasePlayer):
     correct_tests = models.IntegerField()
     total_tests = models.IntegerField()
+    show_threat_task1 = models.BooleanField(initial=False)
+    show_threat_task2 = models.BooleanField(initial=False)
+    game_over_task1 = models.BooleanField(initial=False)
+    game_over_task2 = models.BooleanField(initial=False)
 
     def _tasks_info(self):
         page = self.participant._current_page_name
@@ -99,17 +102,30 @@ class Player(BasePlayer):
         qid = data.get('id')
         answer = data.get('answer')
         page = data.get('page', self.participant._current_page_name)
+        if data.get('game_over'):
+            setattr(self, f'game_over_{page.lower()}', True)
+            return
+        if data.get('show_threat'):
+            setattr(self, f'show_threat_{page.lower()}', True)
+            return {self.id_in_group: dict(show_reminder=True)}
         if answer and qid:
             q = Task.objects.get(id=qid)
+            q.post_time = datetime.now(timezone.utc)
+            q.seconds_on_task = (q.post_time - q.get_time)
+            q.num_seconds_on_task = q.seconds_on_task.total_seconds()
             q.answer = answer
+            q.under_threat = getattr(self, f'show_threat_{page.lower()}')
             q.save()
         next_q = self._next_task(page)
         if next_q:
+            if not next_q.get_time:
+                next_q.get_time = datetime.now(timezone.utc)
+                next_q.save()
             resp = dict(body=render_to_string('./quiz/components/matrix.html',
                                               {'data': chunks(list(next_q.body), Constants.num_rows)}),
                         item_to_check=next_q.item_to_check,
                         id=next_q.id,
-                        cur_task_num=self.cur_task_num()
+                        cur_task_num=self.cur_task_num(),
                         )
 
             r = {self.id_in_group: resp}
@@ -281,6 +297,10 @@ class Task(djmodels.Model):
     answer = models.IntegerField()
     page = models.StringField()
     under_threat = models.BooleanField()
+    post_time = djmodels.DateTimeField(null=True)
+    get_time = djmodels.DateTimeField(null=True)
+    seconds_on_task = djmodels.DurationField(null=True)
+    num_seconds_on_task = models.FloatField()
 
     @property
     def is_correct(self):
@@ -291,6 +311,8 @@ class Task(djmodels.Model):
 
 
 def custom_export(players):
-    yield ['code', 'body', 'answer', 'correct_answer', 'item_to_check']
+    yield ['session', 'code', 'body', 'answer', 'correct_answer', 'item_to_check', 'page', 'under_threat',
+           'get_time', 'post_time', 'sec_on_task', 'num_seconds_on_task']
     for q in Task.objects.order_by('id'):
-        yield [q.owner.participant.code, q.body, q.answer, q.correct_answer, q.item_to_check, ]
+        yield [q.owner.session.code, q.owner.participant.code, q.body, q.answer, q.correct_answer, q.item_to_check,
+               q.page, q.under_threat, q.get_time, q.post_time, q.seconds_on_task, q.num_seconds_on_task]

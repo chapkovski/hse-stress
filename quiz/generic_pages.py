@@ -1,5 +1,7 @@
 from ._builtin import Page as oTreePage
 
+from datetime import datetime, timezone
+
 
 class Page(oTreePage):
     def get_progress(self):
@@ -9,8 +11,14 @@ class Page(oTreePage):
 
 
 class TaskPage(Page):
-    def vars_for_template(self):
-        return dict(name=self.__class__.__name__)
+    def get(self, *args, **kwargs):
+        self.participant.vars.setdefault(f'entrance_time_{self.__class__.__name__}', datetime.now(timezone.utc))
+        return super().get(*args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        r = super().get_context_data( *args, **kwargs)
+        r['name'] = self.__class__.__name__
+        return r
 
     def js_vars(self):
         return self.vars_for_template()
