@@ -9,7 +9,7 @@
 {% block content %}
     {% if session.config.stress|default_if_none:False and name == 'Task2' %}
         <div class="alert alert-danger lead text-center ">
-        {{ Constants.stress_msg }}
+            {{ Constants.stress_msg }}
         </div>
     {% endif %}
     <script src="{% static 'otree/js/jquery.countdown.min.js' %}"></script>
@@ -18,7 +18,7 @@
 {% if not show_warning %}
       d-none
     {% endif %}"
-     id="timer_block">
+         id="timer_block">
         <p>Time left:
 
             <span class="tasks_time_left font-weight-bold"></span>
@@ -48,11 +48,11 @@ logic is the following
                     // %S is seconds left
                     var format = '%-N:%S';
                     console.debug(event.offset.totalSeconds)
-                    if(event.offset.totalSeconds<=sec_before_end_warning){
+                    if (event.offset.totalSeconds <= sec_before_end_warning) {
 
-                        if (!show_warning){
+                        if (!show_warning) {
                             console.debug('SHOW WARNING');
-                            show_warning=true;
+                            show_warning = true;
                             $('#timer_block').removeClass('d-none');
                             liveSend({show_threat: true, page: js_vars['page']})
                         }
@@ -108,7 +108,12 @@ logic is the following
             $('#body').html(body || '')
 
         }
-
+        $answer_input.keyup(function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                $('#answer_btn').click();
+            }
+        });
         $('#answer_btn').click(() => {
 
             const val = $answer_input.val();
