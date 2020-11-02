@@ -2,7 +2,7 @@
 {% load otree hse %}
 
 {% block title %}
-    Second stage announcement
+    First stage announcement
 {% endblock %}
 
 {% block content %}
@@ -10,17 +10,13 @@
     <div class="card my-3">
         <div class="card-body">
             <h5 class="card-title">Announcement</h5>
-            <div>You have done correctly <span class="font-weight-bold">{{ correct_tasks }}</span>
+            <div>The practice round is over.</div>
+            <div>You have done correctly <span class="font-weight-bold">{{ correct_tasks }} </span>
                 out of {{ total_tasks }} tasks in {{ get_time_for_tasks|duration }}</div>
             <div>
-                Now you'll have the second set of tasks.
+                Now you'll have the first set of tasks that you'll do for money.
             </div>
-            {% if tp %}
-                <div>
-                    You will have <span class="font-weight-bold">{{ player.time_for_task_2|duration }}</span>
-                </div>
 
-            {% endif %}
         </div>
     </div>
     <div class="my-3">

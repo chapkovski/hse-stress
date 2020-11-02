@@ -1,6 +1,6 @@
 from otree.api import Currency as c, currency_range
 from ._builtin import WaitPage
-from .generic_pages import Page, TaskPage
+from .generic_pages import Page, TaskPage, AnnouncementPage
 from .models import Constants
 from django.db.models import Sum
 from datetime import datetime, timezone, timedelta
@@ -45,6 +45,15 @@ class IQ(Page):
     pass
 
 
+class Practice(TaskPage):
+    template_name = 'quiz/Task1.html'
+    practice = True
+
+
+class FirstStageAnnouncement(AnnouncementPage):
+    pointer_page = 'Practice'
+
+
 class Task1(TaskPage):
     max_time_for_tasks = Constants.max_time_for_tasks
     sec_before_end_warning = 120
@@ -70,16 +79,8 @@ class Task1(TaskPage):
             aggregate(totsec=Sum('seconds_on_task'))['totsec']
 
 
-class SecondStageAnnouncement(Page):
-    def vars_for_template(self):
-        total_tasks_stage1 = self.player.get_total_tasks('Task1')
-        correct_tasks_stage1 = self.player.get_correct_tasks('Task1')
-        get_time_for_tasks_stage1 = self.player.get_time_spent_tasks('Task1')
-        return dict(correct_tasks_stage1=correct_tasks_stage1.count(),
-                    total_tasks_stage1=total_tasks_stage1.count(),
-                    get_time_for_tasks_stage1=get_time_for_tasks_stage1,
-                    tp=self.session.config.get('tp')
-                    )
+class SecondStageAnnouncement(AnnouncementPage):
+    pointer_page = 'Task1'
 
 
 class Task2(TaskPage):
@@ -119,6 +120,8 @@ class Task2(TaskPage):
                     sec_before_end_warning=sec_before
                     )
 
+class AfterSecondStage(AnnouncementPage):
+    pointer_page = 'Task2'
 
 class Results(Page):
     def get_timeout_seconds(self):
@@ -131,11 +134,12 @@ page_sequence = [
     # IntellAbilityResults,
     # AcuteStress,
     # IQ,
-    # Practice,
-    # FirstStageAnnouncement,
+    Practice,
+    FirstStageAnnouncement,
     Task1,
     SecondStageAnnouncement,
     Task2,
+    AfterSecondStage,
     # Task2Results,
     # AcuteStress1,
     # ChronicStress,

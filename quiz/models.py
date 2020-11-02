@@ -147,9 +147,12 @@ class Player(BasePlayer):
             q.post_time = datetime.now(timezone.utc)
             q.seconds_on_task = (q.post_time - q.get_time)
             q.num_seconds_on_task = q.seconds_on_task.total_seconds()
-            q.answer = answer
-            q.is_correct = q.correct_answer == answer
-            q.under_threat = getattr(self, f'show_threat_{page.lower()}')
+            q.answer = int(answer)
+            q.is_correct = q.correct_answer == q.answer
+            try:
+                q.under_threat = getattr(self, f'show_threat_{page.lower()}')
+            except AttributeError:
+                pass # that should be a practice page
             q.save()
         next_q = self._next_task(page)
         if next_q:
