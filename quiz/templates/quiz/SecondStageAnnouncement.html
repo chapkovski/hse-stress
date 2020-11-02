@@ -10,17 +10,18 @@
     <div class="card my-3">
         <div class="card-body">
             <h5 class="card-title">Announcement</h5>
-            <div>You have done correctly <span class="font-weight-bold">{{ correct_tasks }}</span>
-                out of {{ total_tasks }} tasks in {{ get_time_for_tasks|duration }}</div>
-            <div>
-                Now you'll have the second set of tasks.
-            </div>
-            {% if tp %}
+            {% include 'quiz/includes/result_block.html' %}
+            <div class="my-3 lead text-center">
                 <div>
-                    You will have <span class="font-weight-bold">{{ player.time_for_task_2|duration }}</span>
+                    Now you'll have the second set of tasks.
                 </div>
+                {% if tp %}
+                    <div>
+                        You will have <span class="font-weight-bold">{{ player.time_for_task_2|duration }}</span>
+                    </div>
 
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
     </div>
     <div class="my-3">

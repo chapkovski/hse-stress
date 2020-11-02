@@ -11,6 +11,8 @@ class Page(oTreePage):
 
 
 class TaskPage(Page):
+    practice = False
+
     def get(self, *args, **kwargs):
         self.participant.vars.setdefault(f'entrance_time_{self.__class__.__name__}', datetime.now(timezone.utc))
         return super().get(*args, **kwargs)
