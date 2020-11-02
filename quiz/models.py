@@ -16,12 +16,13 @@ import random
 from string import digits
 from django.template.loader import render_to_string
 from datetime import datetime, timezone, timedelta
+from django.db.models import Sum
 
 logger = logging.getLogger(__name__)
 author = 'Philip Chapkovski, HSE-Moscow'
 
 doc = """
-Your app description
+Stress-related study by Hennig-Schmidt, Chapkovski, Kartavseva
 """
 
 
@@ -33,6 +34,7 @@ class Constants(BaseConstants):
     CHRONIC_CHOICES = ['никогда', 'почти никогда', 'иногда', 'довольно часто', 'часто']
     time_pressure_coef = 0.65
     num_tasks = dict(
+        Practice=2,
         Task1=10,
         Task2=10,
     )
@@ -84,6 +86,30 @@ class Player(BasePlayer):
     game_over_task2 = models.BooleanField(initial=False)
 
     time_spent_on_tasks = djmodels.DurationField(null=True)
+
+    def _get_answered_tasks(self, page):
+        return self.tasks.filter(page=page, answer__isnull=False)
+
+    def get_time_spent_tasks(self, page):
+        """
+        returns total time spent on solving task at the specific page (Practice, Task1, Task2)
+        """
+        ts = self._get_answered_tasks(page)
+        return ts.aggregate(totsec=Sum('seconds_on_task'))['totsec']
+
+    def get_total_tasks(self, page):
+        """
+        returns total number of tasks solved at the specific page (Practice, Task1, Task2)
+        """
+        ts = self._get_answered_tasks(page)
+        return ts.count()
+
+    def get_correct_tasks(self, page):
+        """
+        returns number of  *CORRECT* tasks solved at the specific page (Practice, Task1, Task2)
+        """
+        ts = self._get_answered_tasks(page)
+        return ts.filter(is_correct=True).count()
 
     def time_for_task_2(self):
         if self.session.config.get('tp'):

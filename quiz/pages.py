@@ -72,13 +72,12 @@ class Task1(TaskPage):
 
 class SecondStageAnnouncement(Page):
     def vars_for_template(self):
-        total_tasks_stage1 = self.player.tasks.filter(answer__isnull=False,
-                                                      page='Task1',
-
-                                                      )
-        correct_tasks_stage1 = total_tasks_stage1.filter(is_correct=True, )
+        total_tasks_stage1 = self.player.get_total_tasks('Task1')
+        correct_tasks_stage1 = self.player.get_correct_tasks('Task1')
+        get_time_for_tasks_stage1 = self.player.get_time_spent_tasks('Task1')
         return dict(correct_tasks_stage1=correct_tasks_stage1.count(),
                     total_tasks_stage1=total_tasks_stage1.count(),
+                    get_time_for_tasks_stage1=get_time_for_tasks_stage1,
                     tp=self.session.config.get('tp')
                     )
 
@@ -132,12 +131,12 @@ page_sequence = [
     # IntellAbilityResults,
     # AcuteStress,
     # IQ,
-    Practice,
-    FirstStageAnnouncement,
+    # Practice,
+    # FirstStageAnnouncement,
     Task1,
     SecondStageAnnouncement,
     Task2,
-    Task2Results,
+    # Task2Results,
     # AcuteStress1,
     # ChronicStress,
     # ChronicStressResults,

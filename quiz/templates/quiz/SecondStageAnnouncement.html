@@ -11,7 +11,7 @@
         <div class="card-body">
             <h5 class="card-title">Announcement</h5>
             <div>You have done correctly <span class="font-weight-bold">{{ correct_tasks_stage1 }}</span>
-                out of {{ total_tasks_stage1 }} in {{ player.time_spent_on_tasks|duration }}</div>
+                out of {{ total_tasks_stage1 }} in {{ get_time_for_tasks_stage1|duration }}</div>
             <div>
                 Now you'll have the second set of tasks.
             </div>
