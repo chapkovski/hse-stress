@@ -46,7 +46,7 @@ class IQ(Page):
 
 
 class Task1(TaskPage):
-    max_time_for_tasks = 600
+    max_time_for_tasks = Constants.max_time_for_tasks
     sec_before_end_warning = 120
 
     def get_max_time_for_tasks(self):
@@ -65,12 +65,22 @@ class Task1(TaskPage):
                     )
 
     def before_next_page(self):
-        entrance_time = self.participant.vars[f'entrance_time_Task1']
-        print(datetime.now(timezone.utc) - entrance_time, "POST TIME")
+        self.player.time_spent_on_tasks = self.player.tasks.filter(under_threat=False,
+                                                                   answer__isnull=False, ). \
+            aggregate(totsec=Sum('seconds_on_task'))['totsec']
 
 
 class SecondStageAnnouncement(Page):
-    pass
+    def vars_for_template(self):
+        total_tasks_stage1 = self.player.tasks.filter(answer__isnull=False,
+                                                      page='Task1',
+
+                                                      )
+        correct_tasks_stage1 = total_tasks_stage1.filter(is_correct=True, )
+        return dict(correct_tasks_stage1=correct_tasks_stage1.count(),
+                    total_tasks_stage1=total_tasks_stage1.count(),
+                    tp=self.session.config.get('tp')
+                    )
 
 
 class Task2(TaskPage):
@@ -95,11 +105,7 @@ class Task2(TaskPage):
         if not self.session.config.get('tp'):
             return self.max_time_for_tasks
 
-        underthreat = self.player.tasks.filter(under_threat=False,
-                                               answer__isnull=False, ). \
-            aggregate(totsec=Sum('seconds_on_task'))['totsec']
-        print("BASE TIME", underthreat.total_seconds())
-        return (underthreat.total_seconds()) * 1  # Constants.time_pressure_coef
+        return self.player.time_for_task_2().total_seconds()
 
     def is_displayed(self):
         return not self.player.game_over_task2
@@ -126,9 +132,12 @@ page_sequence = [
     # IntellAbilityResults,
     # AcuteStress,
     # IQ,
+    Practice,
+    FirstStageAnnouncement,
     Task1,
     SecondStageAnnouncement,
     Task2,
+    Task2Results,
     # AcuteStress1,
     # ChronicStress,
     # ChronicStressResults,

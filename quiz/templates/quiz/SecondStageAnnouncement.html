@@ -1,8 +1,8 @@
 {% extends "global/Page.html" %}
-{% load otree static %}
+{% load otree hse %}
 
 {% block title %}
-Second stage announcement
+    Second stage announcement
 {% endblock %}
 
 {% block content %}
@@ -10,13 +10,21 @@ Second stage announcement
     <div class="card my-3">
         <div class="card-body">
             <h5 class="card-title">Announcement</h5>
+            <div>You have done correctly <span class="font-weight-bold">{{ correct_tasks_stage1 }}</span>
+                out of {{ total_tasks_stage1 }} in {{ player.time_spent_on_tasks|duration }}</div>
             <div>
-                Here goes some text announcing there will be  a second set of tasks
+                Now you'll have the second set of tasks.
             </div>
+            {% if tp %}
+                <div>
+                    You will have <span class="font-weight-bold">{{ player.time_for_task_2|duration }}</span>
+                </div>
+
+            {% endif %}
         </div>
     </div>
     <div class="my-3">
-     {% next_button %}
+        {% next_button %}
     </div>
 
 {% endblock %}

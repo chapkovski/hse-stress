@@ -38,6 +38,7 @@ class Constants(BaseConstants):
     )
     task_len = 100
     num_rows = 10
+    max_time_for_tasks = 600
     assert task_len % num_rows == 0
     with open(r'./data/qs.yaml') as file:
         qs = yaml.load(file, Loader=yaml.FullLoader)
@@ -82,6 +83,13 @@ class Player(BasePlayer):
     game_over_task1 = models.BooleanField(initial=False)
     game_over_task2 = models.BooleanField(initial=False)
 
+    time_spent_on_tasks = djmodels.DurationField(null=True)
+
+    def time_for_task_2(self):
+        if self.session.config.get('tp'):
+            return self.time_spent_on_tasks * Constants.time_pressure_coef
+        return timedelta(seconds=Constants.max_time_for_tasks)
+
     def _tasks_info(self):
         page = self.participant._current_page_name
         r = dict(cur=None, total=None)
@@ -119,6 +127,7 @@ class Player(BasePlayer):
             q.save()
         next_q = self._next_task(page)
         if next_q:
+            logger.info(f'Correct answer for the task: {next_q.correct_answer}')
             if not next_q.get_time:
                 next_q.get_time = datetime.now(timezone.utc)
                 next_q.save()
