@@ -5,7 +5,9 @@ SESSION_CONFIGS = [
         name='baseline',
         display_name="Baseline",
         num_demo_participants=1,
-        app_sequence=['quiz']
+        app_sequence=['quiz'],
+        tp=False,
+        stress=False
     ),
     dict(
         name='tp',

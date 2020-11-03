@@ -192,7 +192,7 @@ class Player(BasePlayer):
                     res = res.lower()
                 else:
                     res = ''
-                correct_answer = qs[i]['correct_answer']
+                correct_answer = str(qs[i]['correct_answer'])
                 r.append(dict(label=j.verbose_name,
                               res=res,
                               correct_answer=correct_answer,

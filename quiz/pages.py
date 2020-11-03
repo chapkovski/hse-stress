@@ -134,12 +134,12 @@ page_sequence = [
     # IntellAbilityResults,
     # AcuteStress,
     # IQ,
-    Practice,
-    FirstStageAnnouncement,
+    # Practice,
+    # FirstStageAnnouncement,
     Task1,
     SecondStageAnnouncement,
     Task2,
-    AfterSecondStage,
+    # AfterSecondStage,
     # Task2Results,
     # AcuteStress1,
     # ChronicStress,
@@ -147,4 +147,4 @@ page_sequence = [
     # Results,
 ]
 
-assert set(Constants.num_tasks.keys()).issubset(set([i.__name__ for i in page_sequence]))
+# assert set(Constants.num_tasks.keys()).issubset(set([i.__name__ for i in page_sequence]))

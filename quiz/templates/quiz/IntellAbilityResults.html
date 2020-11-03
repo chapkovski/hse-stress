@@ -1,12 +1,12 @@
 {% extends "global/Page.html" %}
-{% load otree static %}
+{% load otree static hse %}
 
 {% block title %}
     Результаты теста
 {% endblock %}
 
 {% block content %}
-    <h5>Вы ответили правильно на {{ player.correct_tests }} вопрос{{ player.correct_tests|pluralize  }} из {{ player.total_tests }} </h5>
+    <h5>Вы ответили правильно на {{ player.correct_tests|q_ending }} из {{ player.total_tests }} </h5>
     <table class="table table-hover table-striped">
         <thead>
         <th>Вопрос</th>
