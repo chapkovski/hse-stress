@@ -8,7 +8,8 @@ from datetime import datetime, timezone, timedelta
 
 class SocialEconomic(Page):
     form_model = 'player'
-    form_fields = ['age', 'gender', 'education', 'education1', 'education_other', 'occupation','birth', 'game', 'money', ]
+    form_fields = ['age', 'gender', 'education', 'education1', 'education_other', 'occupation', 'birth', 'game',
+                   'money', ]
 
 
 class IntellAbility(Page):
@@ -120,40 +121,42 @@ class Task2(TaskPage):
                     sec_before_end_warning=sec_before
                     )
 
+
 class AfterSecondStage(AnnouncementPage):
     pointer_page = 'Task2'
-
 
 
 class Instructions(Page):
     pass
 
+
 class Instructions1(Page):
     pass
+
 
 class Instructions2(Page):
     pass
 
+
 page_sequence = [
-     # Instructions,
-     # SocialEconomic,
-      IntellAbility,
-      IntellAbilityResults,
-      # AcuteStress,
-      # Instructions1,
-      # IQ,
-       Practice,
-      FirstStageAnnouncement,
-      Task1,
-      SecondStageAnnouncement,
-      Instructions2,
-     # Task2,
-     # AfterSecondStage,
-     # Task2Results,
+    ## Instructions,
+    ## SocialEconomic,
+    IntellAbility,
+    IntellAbilityResults,
+    ## AcuteStress,
+    ## Instructions1,
+    ## IQ,
+    # Practice,
+    # FirstStageAnnouncement,
+    Task1,
+    SecondStageAnnouncement,
+    Instructions2,
+    Task2,
+    AfterSecondStage,
+    # Task2Results,
     # AcuteStress1,
     # ChronicStress,
-     # ChronicStressResults,
-
+    # ChronicStressResults,
 ]
 
 # assert set(Constants.num_tasks.keys()).issubset(set([i.__name__ for i in page_sequence]))
