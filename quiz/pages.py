@@ -8,7 +8,7 @@ from datetime import datetime, timezone, timedelta
 
 class SocialEconomic(Page):
     form_model = 'player'
-    form_fields = ['age', 'gender', 'education', 'education1', 'education_other', 'birth', 'game', 'money', ]
+    form_fields = ['age', 'gender', 'education', 'education1', 'education_other', 'occupation','birth', 'game', 'money', ]
 
 
 class IntellAbility(Page):
@@ -32,7 +32,7 @@ class AcuteStress(Page):
 
 class AcuteStress1(Page):
     form_model = 'player'
-    form_fields = ['acute3', 'acute4']
+    form_fields = ['acute3', 'acute4', 'opinion1']
 
 
 class ChronicStress(Page):
@@ -123,28 +123,37 @@ class Task2(TaskPage):
 class AfterSecondStage(AnnouncementPage):
     pointer_page = 'Task2'
 
-class Results(Page):
-    def get_timeout_seconds(self):
-        return self.player.age
 
+
+class Instructions(Page):
+    pass
+
+class Instructions1(Page):
+    pass
+
+class Instructions2(Page):
+    pass
 
 page_sequence = [
-    # SocialEconomic,
-    # IntellAbility,
-    # IntellAbilityResults,
-    # AcuteStress,
-    # IQ,
-    # Practice,
-    # FirstStageAnnouncement,
-    Task1,
-    SecondStageAnnouncement,
-    Task2,
-    # AfterSecondStage,
-    # Task2Results,
+     # Instructions,
+     # SocialEconomic,
+      IntellAbility,
+      IntellAbilityResults,
+      # AcuteStress,
+      # Instructions1,
+      # IQ,
+       Practice,
+      FirstStageAnnouncement,
+      Task1,
+      SecondStageAnnouncement,
+      Instructions2,
+     # Task2,
+     # AfterSecondStage,
+     # Task2Results,
     # AcuteStress1,
     # ChronicStress,
-    # ChronicStressResults,
-    # Results,
+     # ChronicStressResults,
+
 ]
 
 # assert set(Constants.num_tasks.keys()).issubset(set([i.__name__ for i in page_sequence]))

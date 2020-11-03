@@ -15,8 +15,7 @@ def duration(td):
     total_seconds = int(td.total_seconds())
     minutes = total_seconds // 60
     seconds = td.seconds
-    return '{} minutes {} seconds'.format(minutes, seconds)
-
+    return '{} минут {} секунд'.format(minutes, seconds)
 
 @register.filter
 def q_ending(value):
@@ -35,6 +34,5 @@ def q_ending(value):
             r = 'вопрос'
         else:
             r = 'вопросов'
-
         return re_val + " " + r
     return value

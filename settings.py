@@ -15,6 +15,7 @@ SESSION_CONFIGS = [
         num_demo_participants=1,
         app_sequence=['quiz'],
         tp=True,
+        stress=False
     ),
     dict(
         name='stress',

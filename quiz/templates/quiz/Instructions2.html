@@ -1,0 +1,35 @@
+{% extends "global/Page.html" %}
+{% load otree static hse %}
+
+{% block title %}
+
+     <div class="alert alert-info" role="alert"> Благодарим Вас за прохождение первой части теста!
+</div>
+{% endblock %}
+
+
+{% block content %}
+
+    {% if session.config.tp and session.config.stress %}
+        <div class = "p-3 mb-2 bg-light text-info"> <h5> Во второй части тесте Вам будет необходимо снова решить 10 матриц, похожих на те,
+            что вы уже решали в первом тесте.
+            Однако теперь у Вас будет {{ player.time_for_task_2|duration }} на это. Это довольно существенное ограничение.
+           И примите во внимание, что чем чаще вы будете ошибаться,
+            тем больше денег вы потеряете!!!!! </h5> </div>
+
+    {% elif session.config.tp %}
+        <div  class="p-3 mb-2 bg-light text-info"> <h5> Во второй части тесте Вам будет необходимо снова решить 10 матриц, похожих на те, что вы уже решали в первом тесте.
+            У вас {{ player.time_for_task_2|duration }} на это.
+            Желаем удачи! </h5> </div>
+    {% else %}
+        <div  class="p-3 mb-2 bg-light text-info"> <h5> Во второй части теста Вам будет необходимо снова решить 10 матриц,
+    похожих на те, что вы уже решали в первой части .
+    Желаем удачи!</h5> </div>
+    {% endif %}
+
+    {% next_button %}
+{% endblock %}
+
+
+
+

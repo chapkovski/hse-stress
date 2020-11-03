@@ -1,0 +1,55 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+
+     <div class="alert alert-info" role="alert"> Благодарим Вас за прохождение анкет!
+</div>
+{% endblock %}
+
+{% block content %}
+   <div  class="p-3 mb-2 bg-light text-info"> <h5>
+       Далее начинается основная часть эксперимента.
+       Она в свою очередь тоже состоит из нескольких маленьких частей,
+       а точнее из трех ранудов: один тренировочный и два основных.
+       Ниже приведены инструкции для первой части эксперимента. В первую часть входят тренировочный раунд
+       и первый основной раунд.
+       После завершения первой части Вы получите дальнейшие инструкции.
+    </h5> </div>
+       <div>
+
+    <p class="my-3 lead"> <svg width="0.5em" height="0.5em" viewBox="0 0 16 16" class="bi bi-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+</svg>
+    На экране Вы увидите матрицы с числами. Ваша задача будет посчитать,
+    какое количество семерок (или других цифр - цифра будет указана в задании) встречается в этой матрице и ввести нужное число в поле внизу.
+    Первые две матрицы даны просто для тренировки, вознагражденте за них не начисляется.
+    После прохождения двух обучающих вопросов начнется основной тест. Он состоит из 10 заданий.
+    </p>
+
+
+  </div>
+<div>
+
+    <p class="lead"> <svg width="0.5em" height="0.5em" viewBox="0 0 16 16" class="bi bi-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+</svg> Вы получите вознаграждение в количестве 20 рублей за каждую решенную матрицу  </p>
+   </div>
+
+    <div>
+
+    <p class="lead"> <svg width="0.5em" height="0.5em" viewBox="0 0 16 16" class="bi bi-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+</svg> Помните, что возвращаться к уже решенным заданиям или пролистывать вперед нельзя. </p>
+   </div>
+
+    <p class="lead"> <svg width="0.5em" height="0.5em" viewBox="0 0 16 16" class="bi bi-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+</svg>  В конце первой части вы узнаете, сколько заданий вы решили верно и какова сумма вашего вознаграждения.</p>
+   </div>
+
+
+    {% next_button %}
+{% endblock %}
+
+

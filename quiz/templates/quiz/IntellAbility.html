@@ -1,14 +1,31 @@
 {% extends "global/Page.html" %}
 {% load otree static %}
 
-
 {% block title %}
-    Выберите,пожалуйста, верный ответ
+
 {% endblock %}
 
 {% block content %}
-    <h1></h1>
-    {% formfields %}
+
+      <div class="p-3 mb-2 bg-light text-info"> <h5> Выберите, пожалуйста, верный ответ из списка предложенных или запишите в поле ответа там, где требуется </h5> </div>
+
+
+    {% formfield player.test1 %}
+    {% formfield player.test2 %}
+    {% formfield player.test3 %}
+
+    <div>Из левого числа получается правое число по одной и той же формуле. Что за число вместо знака вопроса?</div>
+             <div> 12...2</div>
+            <div>  3... - 1</div>
+            <div>  18... 4</div>
+          <div>  9... ?</div>
+{% formfield player.test4 label=''%}
+
+    {% formfield player.test6 %}
+    {% formfield player.test8 %}
+    {% formfield player.test9 %}
+    {% formfield player.test10 %}
+
     {% next_button %}
 
 {% endblock %}
