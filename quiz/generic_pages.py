@@ -1,8 +1,10 @@
 from ._builtin import Page as oTreePage
 
 from datetime import datetime, timezone
+from django.db.models import Sum
 
-
+import logging
+logger = logging.getLogger(__name__)
 class Page(oTreePage):
     def get_progress(self):
         totpages = self.participant._max_page_index
@@ -28,6 +30,29 @@ class TaskPage(Page):
         return r
 
     live_method = 'get_next_task'
+
+    def before_next_page(self):
+        page = self.__class__.__name__
+        stage = page[-1]
+        if not self.practice:
+            time_spent_on_tasks = self.player.tasks.filter(under_threat=False,
+                                                           answer__isnull=False, page=page). \
+                aggregate(totsec=Sum('seconds_on_task'))['totsec']
+
+            performance = self.player.tasks.filter(is_correct=True, page=page).count()
+            total_submitted = self.player.tasks.filter(answer__isnull=False, page=page).count()
+            if performance > 0:
+                productivity = performance / (
+                        time_spent_on_tasks.total_seconds() / 60)
+            else:
+                productivity = 0
+            items_to_assign = ((f'time_spent_on_tasks_{stage}', time_spent_on_tasks),
+                               (f'total_submitted_{stage}', total_submitted),
+                               (f'performance_{stage}', performance),
+                               (f'productivity_{stage}', productivity))
+            for k, v in items_to_assign:
+                setattr(self.player, k, v)
+            logger.info("ITEMS TO ASSIGN", items_to_assign)
 
 
 class AnnouncementPage(Page):

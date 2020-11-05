@@ -2,7 +2,7 @@ from otree.api import Currency as c, currency_range
 from ._builtin import WaitPage
 from .generic_pages import Page, TaskPage, AnnouncementPage
 from .models import Constants
-from django.db.models import Sum
+
 from datetime import datetime, timezone, timedelta
 
 
@@ -74,26 +74,6 @@ class Task1(TaskPage):
                     sec_before_end_warning=self.sec_before_end_warning
                     )
 
-    def before_next_page(self):
-        self.player.time_spent_on_tasks1 = self.player.tasks.filter(under_threat=False,
-                                                                    answer__isnull=False, page='Task1'). \
-            aggregate(totsec=Sum('seconds_on_task'))['totsec']
-        self.player.total_correct_tasks1 = self.player.tasks.filter(is_correct=True, page='Task1').count()
-        self.player.total_submitted = self.player.tasks.filter(answer__isnull=False, page='Task1').count()
-
-        self.player.time_spent_on_tasks2 = self.player.tasks.filter(under_threat=False,
-                                                                    answer__isnull=False, page='Task2'). \
-            aggregate(totsec=Sum('seconds_on_task'))['totsec']
-
-        self.player.performance_1 = self.player.tasks.filter(is_correct=True, page='Task1').count()
-        self.player.performance_2 = self.player.tasks.filter(is_correct=True, page='Task2').count()
-        self.player.total_submitted_1 = self.player.tasks.filter(answer__isnull=False, page='Task1').count()
-        self.player.total_submitted_2 = self.player.tasks.filter(answer__isnull=False, page='Task2').count()
-
-        self.player.productivity_1 = self.player.performance_1 / (
-                self.player.time_spent_on_tasks1.total_seconds() / 60)
-        self.player.productivity_2 = self.player.performance_2 / (
-                self.player.time_spent_on_tasks2.total_seconds() / 60)
 
 
 class SecondStageAnnouncement(AnnouncementPage):
@@ -156,23 +136,23 @@ class Instructions2(Page):
 
 page_sequence = [
 
-    Instructions,
-    SocialEconomic,
-    IntellAbility,
-    IntellAbilityResults,
-    AcuteStress,
-    Instructions1,
+    # Instructions,
+    # SocialEconomic,
+    # IntellAbility,
+    # IntellAbilityResults,
+    # AcuteStress,
+    # Instructions1,
     # IQ,
-    Practice,
-    FirstStageAnnouncement,
+    # Practice,
+    # FirstStageAnnouncement,
     Task1,
     SecondStageAnnouncement,
-    Instructions2,
+    # Instructions2,
     Task2,
     AfterSecondStage,
     # Task2Results,
-    AcuteStress1,
-    ChronicStress,
+    # AcuteStress1,
+    # ChronicStress,
     # ChronicStressResults,
 
 ]

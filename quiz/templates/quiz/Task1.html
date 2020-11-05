@@ -2,12 +2,15 @@
 {% load otree static %}
 
 {% block title %}
- <div class="text-info"> <h5>
-    Задание <span id="cur_task_num">{{ player.cur_task_num }}</span> из {{ player.total_tasks }}  </h5> </div>
+    <div class="text-info"><h5>
+        Задание <span id="cur_task_num">{{ player.cur_task_num }}</span> из {{ player.total_tasks }}  </h5></div>
 
 {% endblock %}
 
 {% block content %}
+    <div class="alert alert-warning  text-center d-none " id="wrong_answer">
+        <h6>Wrong answer! Try again!</h6>
+    </div>
     {% if view.practice|default_if_none:False %}
         <div class="alert alert-info lead text-center ">
             Внимание! Это тренировочный раунд! Решенные задания не оплачиваются!
@@ -92,7 +95,8 @@
     </div>
     <script>
         const $answer_input = $('#answer_num')
-        let currentId, item_to_check, body, no_tasks_left, cur_task_num, show_reminder;
+        const $wrong_answer_div = $('#wrong_answer')
+        let currentId, item_to_check, body, no_tasks_left, cur_task_num, show_reminder, wrong_answer;
         $(() => {
             $answer_input.focus();
             liveSend({handshake: true, page: js_vars['name']})
@@ -100,7 +104,12 @@
         })
         const liveRecv = (data) => {
             console.debug('received a message!', data);
-            ({id: currentId, item_to_check, body, no_tasks_left, cur_task_num, show_reminder} = data);
+            ({id: currentId, item_to_check, body, no_tasks_left, cur_task_num, show_reminder, wrong_answer} = data);
+            if (wrong_answer) {
+                $wrong_answer_div.removeClass('d-none')
+            } else {
+                $wrong_answer_div.addClass('d-none')
+            }
             if (show_reminder) {
                 $('#timer_block').show();
                 return

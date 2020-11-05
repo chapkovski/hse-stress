@@ -32,6 +32,7 @@ class Constants(BaseConstants):
     players_per_group = None
     num_rounds = 1
     CHRONIC_CHOICES = ['никогда', 'почти никогда', 'иногда', 'довольно часто', 'часто']
+    check_for_correction = ['Practice']  # list of pages where we check for correct answers
     time_pressure_coef = 0.65
     num_tasks = dict(
         Practice=2,
@@ -55,6 +56,7 @@ def chunks(l, n):
 
 class Subsession(BaseSubsession):
     treatment = models.StringField()
+
     def creating_session(self):
         if self.session.config.get('tp') and self.session.config.get('stress'):
             self.treatment = 'stress+tp'
@@ -91,13 +93,12 @@ class Player(BasePlayer):
     game_over_task1 = models.BooleanField(initial=False)
     game_over_task2 = models.BooleanField(initial=False)
 
-
     performance_1 = models.IntegerField()
     performance_2 = models.IntegerField()
     total_submitted_1 = models.IntegerField()
     total_submitted_2 = models.IntegerField()
-    time_spent_on_tasks1 = djmodels.DurationField(null=True)
-    time_spent_on_tasks2 = djmodels.DurationField(null=True)
+    time_spent_on_tasks_1 = djmodels.DurationField(null=True)
+    time_spent_on_tasks_2 = djmodels.DurationField(null=True)
     productivity_1 = models.FloatField()
     productivity_2 = models.FloatField()
 
@@ -127,7 +128,7 @@ class Player(BasePlayer):
 
     def time_for_task_2(self):
         if self.session.config.get('tp'):
-            return self.time_spent_on_tasks * Constants.time_pressure_coef
+            return self.time_spent_on_tasks_1 * Constants.time_pressure_coef
         return timedelta(seconds=Constants.max_time_for_tasks)
 
     def _tasks_info(self):
@@ -145,10 +146,24 @@ class Player(BasePlayer):
     def total_tasks(self):
         return self._tasks_info()['total']
 
+    def render_q(self, q):
+        """
+        We get the question item and render it for html
+        """
+        resp = dict(body=render_to_string('./quiz/components/matrix.html',
+                                          {'data': chunks(list(q.body), Constants.num_rows)}),
+                    item_to_check=q.item_to_check,
+                    id=q.id,
+                    cur_task_num=self.cur_task_num(),
+                    )
+
+        return resp
+
     def get_next_task(self, data):
+        """
+        We get the user response from live page and return something here (mostly the next task)
+        """
         logger.info(data)
-        qid = data.get('id')
-        answer = data.get('answer')
         page = data.get('page', self.participant._current_page_name)
         if data.get('game_over'):
             setattr(self, f'game_over_{page.lower()}', True)
@@ -156,6 +171,12 @@ class Player(BasePlayer):
         if data.get('show_threat'):
             setattr(self, f'show_threat_{page.lower()}', True)
             return {self.id_in_group: dict(show_reminder=True)}
+
+        qid = data.get('id')
+        answer = data.get('answer')
+
+        check_for_correction = page in Constants.check_for_correction
+
         if answer and qid:
             q = Task.objects.get(id=qid)
             q.post_time = datetime.now(timezone.utc)
@@ -163,10 +184,15 @@ class Player(BasePlayer):
             q.num_seconds_on_task = q.seconds_on_task.total_seconds()
             q.answer = int(answer)
             q.is_correct = q.correct_answer == q.answer
+            if not q.is_correct and check_for_correction:
+                """We return back the q with the warning that it's not correct"""
+                resp = self.render_q(q)
+                resp['wrong_answer'] = True
+                return {self.id_in_group: resp}
             try:
                 q.under_threat = getattr(self, f'show_threat_{page.lower()}')
             except AttributeError:
-                pass # that should be a practice page
+                pass  # that should be a practice page
             q.save()
         next_q = self._next_task(page)
         if next_q:
@@ -174,13 +200,7 @@ class Player(BasePlayer):
             if not next_q.get_time:
                 next_q.get_time = datetime.now(timezone.utc)
                 next_q.save()
-            resp = dict(body=render_to_string('./quiz/components/matrix.html',
-                                              {'data': chunks(list(next_q.body), Constants.num_rows)}),
-                        item_to_check=next_q.item_to_check,
-                        id=next_q.id,
-                        cur_task_num=self.cur_task_num(),
-                        )
-
+            resp = self.render_q(next_q)
             r = {self.id_in_group: resp}
             return r
         return {self.id_in_group: dict(no_tasks_left=True)}
@@ -235,7 +255,8 @@ class Player(BasePlayer):
                                     widget=OtherRadioSelect(other=('другое', 'education_other')))
     education_other = models.StringField(label='', blank=True)
     birth = models.StringField(label='В какой стране и каком городе Вы родились?')
-    occupation = models.StringField (label= 'Пожалуйста, укажите, по какой профессии/специальности вы работаете. Если Вы не работаете или самозаняты, то тоже укажите это')
+    occupation = models.StringField(
+        label='Пожалуйста, укажите, по какой профессии/специальности вы работаете. Если Вы не работаете или самозаняты, то тоже укажите это')
 
     game = models.StringField(
         label='Если я вовлечен в какую-либо игру, мне всегда хочется победить. Насколько Вы согласны с данным утверждением? '
@@ -280,8 +301,8 @@ class Player(BasePlayer):
         label='Угадайте слово, которое стоит в алфавитном порядке между данными словами и удовлетворяет подсказке: '
               'знак - (обладание какими-либо сведениями) - знахарь')
     acute1 = models.StringField(
-        label= 'Вам понравились задания ? Оцените, насколько вам было интересно проходить тест по шкале от 1 до 10, '
-               'где 10 – превосходно, очень понравилось , а 1 – ужасно, отвратительно',
+        label='Вам понравились задания ? Оцените, насколько вам было интересно проходить тест по шкале от 1 до 10, '
+              'где 10 – превосходно, очень понравилось , а 1 – ужасно, отвратительно',
         choices=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
         widget=widgets.RadioSelect)
     acute2 = models.StringField(
@@ -292,13 +313,13 @@ class Player(BasePlayer):
         widget=widgets.RadioSelect)
     acute3 = models.StringField(
         label=' Оцените по шкале от 1 до 10, насколько вы были напряжены, испытывали ли стресс и волнение во время прохождения первого раунда основной части. '
-                '1 – был совершенно расслаблен, спокоен, а 10 – был экстремально напряжен, '
+              '1 – был совершенно расслаблен, спокоен, а 10 – был экстремально напряжен, '
               'на грани истерики или нервного срыва:',
         choices=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
         widget=widgets.RadioSelect)
     acute4 = models.StringField(
         label='Оцените по шкале от 1 до 10, насколько вы были напряжены, испытывали ли стресс и волнение во время прохождения второго раунда основной части. '
-               '1 – был совершенно расслаблен, спокоен, '
+              '1 – был совершенно расслаблен, спокоен, '
               'а 10 – был экстремально напряжен, на грани истерики или нервного срыва:',
         choices=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
         widget=widgets.RadioSelect)
@@ -341,7 +362,8 @@ class Player(BasePlayer):
         choices=Constants.CHRONIC_CHOICES,
         widget=widgets.RadioSelect)
 
-    opinion1 = models.StringField (label = 'Расскажите, пожалуйста, понравилось ли Вам исследование и какие у Вас есть замечания')
+    opinion1 = models.StringField(
+        label='Расскажите, пожалуйста, понравилось ли Вам исследование и какие у Вас есть замечания')
 
 
 class Task(djmodels.Model):
@@ -370,5 +392,3 @@ def custom_export(players):
                q.is_correct,
                q.item_to_check,
                q.page, q.under_threat, q.get_time, q.post_time, q.seconds_on_task, q.num_seconds_on_task]
-
-
