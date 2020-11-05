@@ -8,8 +8,7 @@ from datetime import datetime, timezone, timedelta
 
 class SocialEconomic(Page):
     form_model = 'player'
-    form_fields = ['age', 'gender', 'education', 'education1', 'education_other', 'occupation', 'birth', 'game',
-                   'money', ]
+    form_fields = ['age', 'gender', 'education', 'education1', 'education_other', 'occupation','birth', 'game', 'money' ]
 
 
 class IntellAbility(Page):
@@ -75,9 +74,23 @@ class Task1(TaskPage):
                     )
 
     def before_next_page(self):
-        self.player.time_spent_on_tasks = self.player.tasks.filter(under_threat=False,
-                                                                   answer__isnull=False, ). \
+        self.player.time_spent_on_tasks1 = self.player.tasks.filter(under_threat=False,
+                                                                   answer__isnull=False,page = 'Task1'). \
             aggregate(totsec=Sum('seconds_on_task'))['totsec']
+
+        self.player.time_spent_on_tasks2 = self.player.tasks.filter(under_threat=False,
+                                                                    answer__isnull=False, page = 'Task2'). \
+            aggregate(totsec=Sum('seconds_on_task'))['totsec']
+
+        self.player.performance_1 = self.player.tasks.filter(is_correct=True, page='Task1').count()
+        self.player.performance_2 = self.player.tasks.filter(is_correct=True, page='Task2').count()
+        self.player.total_submitted_1 = self.player.tasks.filter(answer__isnull=False, page='Task1').count()
+        self.player.total_submitted_2 = self.player.tasks.filter(answer__isnull=False, page='Task2').count()
+
+        self.player.productivity_1 = self.player.performance_1 / (
+                self.player.time_spent_on_tasks1.total_seconds ()/60)
+        self.player.productivity_2 = self.player.performance_2 / (
+                self.player.time_spent_on_tasks2.total_seconds ()/ 60)
 
 
 class SecondStageAnnouncement(AnnouncementPage):
@@ -121,42 +134,40 @@ class Task2(TaskPage):
                     sec_before_end_warning=sec_before
                     )
 
-
 class AfterSecondStage(AnnouncementPage):
     pointer_page = 'Task2'
+
 
 
 class Instructions(Page):
     pass
 
-
 class Instructions1(Page):
     pass
-
 
 class Instructions2(Page):
     pass
 
-
 page_sequence = [
-    ## Instructions,
-    ## SocialEconomic,
-    IntellAbility,
-    IntellAbilityResults,
-    ## AcuteStress,
-    ## Instructions1,
-    ## IQ,
-    # Practice,
-    # FirstStageAnnouncement,
-    Task1,
-    SecondStageAnnouncement,
-    Instructions2,
-    Task2,
-    AfterSecondStage,
-    # Task2Results,
-    # AcuteStress1,
-    # ChronicStress,
-    # ChronicStressResults,
+      Instructions,
+      SocialEconomic,
+      IntellAbility,
+      IntellAbilityResults,
+       AcuteStress,
+       Instructions1,
+       # IQ,
+       Practice,
+      FirstStageAnnouncement,
+      Task1,
+      SecondStageAnnouncement,
+      Instructions2,
+       Task2,
+      AfterSecondStage,
+     # Task2Results,
+     AcuteStress1,
+     ChronicStress,
+     # ChronicStressResults,
+
 ]
 
 # assert set(Constants.num_tasks.keys()).issubset(set([i.__name__ for i in page_sequence]))

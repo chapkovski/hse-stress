@@ -54,8 +54,14 @@ def chunks(l, n):
 
 
 class Subsession(BaseSubsession):
-
+    treatment = models.StringField()
     def creating_session(self):
+        if self.session.config.get('tp') and self.session.config.get('stress'):
+            self.treatment = 'stress+tp'
+        elif self.session.config.get('tp'):
+            self.treatment = 'tp only'
+        else:
+            self.treatment = 'baseline'
         sqs = []
         for p in self.get_players():
             for page, num_tasks in Constants.num_tasks.items():
@@ -85,7 +91,15 @@ class Player(BasePlayer):
     game_over_task1 = models.BooleanField(initial=False)
     game_over_task2 = models.BooleanField(initial=False)
 
-    time_spent_on_tasks = djmodels.DurationField(null=True)
+
+    performance_1 = models.IntegerField()
+    performance_2 = models.IntegerField()
+    total_submitted_1 = models.IntegerField()
+    total_submitted_2 = models.IntegerField()
+    time_spent_on_tasks1 = djmodels.DurationField(null=True)
+    time_spent_on_tasks2 = djmodels.DurationField(null=True)
+    productivity_1 = models.FloatField()
+    productivity_2 = models.FloatField()
 
     def _get_answered_tasks(self, page):
         return self.tasks.filter(page=page, answer__isnull=False)
