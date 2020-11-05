@@ -78,6 +78,8 @@ class Task1(TaskPage):
         self.player.time_spent_on_tasks = self.player.tasks.filter(under_threat=False,
                                                                    answer__isnull=False, ). \
             aggregate(totsec=Sum('seconds_on_task'))['totsec']
+        self.player.total_correct_tasks1 = self.player.tasks.filter(is_correct=True, page='Task1').count()
+        self.player.total_submitted = self.player.tasks.filter(answer__isnull=False, page='Task1').count()
 
 
 class SecondStageAnnouncement(AnnouncementPage):

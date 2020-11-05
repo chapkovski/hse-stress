@@ -54,8 +54,14 @@ def chunks(l, n):
 
 
 class Subsession(BaseSubsession):
-
+    treatment = models.StringField()
     def creating_session(self):
+        if self.session.config.get('tp') and self.session.config.get('stress'):
+            self.treatment = 'stress+tp'
+        elif self.session.config.get('tp'):
+            self.treatment = 'tp only'
+        else:
+            self.treatment = 'baseline'
         sqs = []
         for p in self.get_players():
             for page, num_tasks in Constants.num_tasks.items():
