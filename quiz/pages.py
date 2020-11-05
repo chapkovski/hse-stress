@@ -136,24 +136,24 @@ class Instructions2(Page):
 
 page_sequence = [
 
-    # Instructions,
-    # SocialEconomic,
-    # IntellAbility,
-    # IntellAbilityResults,
-    # AcuteStress,
-    # Instructions1,
-    # IQ,
+    Instructions,
+    SocialEconomic,
+    IntellAbility,
+    IntellAbilityResults,
+    AcuteStress,
+    Instructions1,
+    IQ,
     Practice,
     FirstStageAnnouncement,
     Task1,
     SecondStageAnnouncement,
-    # Instructions2,
+    Instructions2,
     Task2,
     AfterSecondStage,
-    # Task2Results,
-    # AcuteStress1,
-    # ChronicStress,
-    # ChronicStressResults,
+    Task2Results,
+    AcuteStress1,
+    ChronicStress,
+    ChronicStressResults,
 
 ]
 
