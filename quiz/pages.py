@@ -150,10 +150,10 @@ page_sequence = [
     Instructions2,
     Task2,
     AfterSecondStage,
-    Task2Results,
+    # Task2Results,
     AcuteStress1,
     ChronicStress,
-    ChronicStressResults,
+    # ChronicStressResults,
 
 ]
 
