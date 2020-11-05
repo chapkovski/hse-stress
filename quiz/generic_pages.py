@@ -35,8 +35,7 @@ class TaskPage(Page):
         page = self.__class__.__name__
         stage = page[-1]
         if not self.practice:
-            time_spent_on_tasks = self.player.tasks.filter(under_threat=False,
-                                                           answer__isnull=False, page=page). \
+            time_spent_on_tasks = self.player.tasks.filter(answer__isnull=False, page=page). \
                 aggregate(totsec=Sum('seconds_on_task'))['totsec']
 
             performance = self.player.tasks.filter(is_correct=True, page=page).count()
