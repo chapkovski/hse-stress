@@ -31,9 +31,6 @@ class AcuteStress(Page):
     form_fields = ['acute1', 'acute2']
 
 
-class AcuteStress1(Page):
-    form_model = 'player'
-    form_fields = ['acute3', 'acute4', 'opinion1']
 
 
 class ChronicStress(Page):
@@ -133,16 +130,15 @@ class Instructions1(Page):
 class Instructions2(Page):
     pass
 
+class Opinion(Page):
+    form_model = 'player'
+    form_fields = ['opinion1']
 
 page_sequence = [
 
-    Instructions,
-    SocialEconomic,
-    IntellAbility,
-    IntellAbilityResults,
-    AcuteStress,
-    Instructions1,
-    IQ,
+     Instructions,
+     Instructions1,
+
     Practice,
     FirstStageAnnouncement,
     Task1,
@@ -150,11 +146,13 @@ page_sequence = [
     Instructions2,
     Task2,
     AfterSecondStage,
-    # Task2Results,
-    AcuteStress1,
+    AcuteStress,
     ChronicStress,
-    # ChronicStressResults,
+    IntellAbility,
+    IntellAbilityResults,
+    SocialEconomic,
+    Opinion
 
 ]
 
-# assert set(Constants.num_tasks.keys()).issubset(set([i.__name__ for i in page_sequence]))
+ # assert set(Constants.num_tasks.keys()).issubset(set([i.__name__ for i in page_sequence]))
