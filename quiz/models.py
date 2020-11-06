@@ -156,7 +156,8 @@ class Player(BasePlayer):
                     id=q.id,
                     cur_task_num=self.cur_task_num(),
                     )
-
+        if self.session.is_demo:
+            r['correct_answer'] = q.correct_answer
         return resp
 
     def get_next_task(self, data):
