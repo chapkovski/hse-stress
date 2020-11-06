@@ -1,11 +1,12 @@
 from os import environ
 
+app_sequence = ['quiz', 'last']
 SESSION_CONFIGS = [
     dict(
         name='baseline',
         display_name="Baseline",
         num_demo_participants=1,
-        app_sequence=['quiz'],
+        app_sequence=app_sequence,
         tp=False,
         stress=False
     ),
@@ -13,7 +14,7 @@ SESSION_CONFIGS = [
         name='tp',
         display_name="TP Treatment",
         num_demo_participants=1,
-        app_sequence=['quiz'],
+        app_sequence=app_sequence,
         tp=True,
         stress=False
     ),
@@ -21,7 +22,7 @@ SESSION_CONFIGS = [
         name='stress',
         display_name="TP+Stress treatment",
         num_demo_participants=1,
-        app_sequence=['quiz'],
+        app_sequence=app_sequence,
         tp=True,
         stress=True
     ),
