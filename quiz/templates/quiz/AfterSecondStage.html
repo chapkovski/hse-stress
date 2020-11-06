@@ -10,12 +10,29 @@
     <div class="card my-3">
         <div class="card-body">
             <h5 class="alert alert-info" class="card-title">Поздравляем! Тест окончен!</h5>
-            <div  class=" p-3 mb-2 bg-light text-info" >Результаты:</div>
+            <div class=" p-3 mb-2 bg-light text-info">Результаты:</div>
             <h5>Первая часть:</h5>
             {% include 'quiz/includes/result_block.html' with correct_tasks=player.performance_1 get_time_for_tasks=player.time_spent_on_tasks_1 total_tasks=player.total_submitted_1 %}
             <h5 class="my-3">Вторая часть:</h5>
             {% include 'quiz/includes/result_block.html' with correct_tasks=player.performance_2 get_time_for_tasks=player.time_spent_on_tasks_2 total_tasks=player.total_submitted_2 %}
 
+            <h5 class="my-3">Ваш бонус:</h5>
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Общее число заданий
+                    <span class="badge badge-primary badge-pill">
+        {{ total_tasks_together }}
+    </span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Плата за задание:
+                    <span class="badge badge-primary badge-pill">{{ Constants.fee|c }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Размер бонуса:
+                    <span class="badge badge-primary badge-pill">{{ player.payoff }}</span>
+                </li>
+            </ul>
 
         </div>
     </div>

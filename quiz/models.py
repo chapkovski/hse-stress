@@ -42,7 +42,7 @@ class Constants(BaseConstants):
     task_len = 100
     num_rows = 10
     max_time_for_tasks = 600
-    fee = c(20)
+    fee = c(.25)
     assert task_len % num_rows == 0
     with open(r'./data/qs.yaml') as file:
         qs = yaml.load(file, Loader=yaml.FullLoader)
@@ -86,6 +86,7 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
+    part_for_payment = models.IntegerField(choices=[0, 1])
     correct_tests = models.IntegerField()
     total_tests = models.IntegerField()
     show_threat_task1 = models.BooleanField(initial=False)
@@ -237,10 +238,9 @@ class Player(BasePlayer):
         return r
 
     def set_payoff(self):
-        self.player.payoff = (self.performance_1 + self.performance_2) * Constants.fee
-        self.player.payoff = random.choice([self.performance_1 , self.performance_2]) * Constants.fee
+        self.payoff = (self.performance_1 + self.performance_2) * Constants.fee
 
-    age = models.IntegerField(min=18, max=101, label=' Сколько Вам <b>лет</b>?')
+    age = models.IntegerField(min=18, max=101, label=' Сколько Вам лет?')
     gender = models.StringField(label='Укажите Ваш пол?',
                                 widget=widgets.RadioSelect,
                                 choices=['Мужской', 'Женский'],

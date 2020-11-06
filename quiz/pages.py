@@ -130,8 +130,15 @@ class Task2(TaskPage):
     def before_next_page(self):
         super().before_next_page()
         self.player.set_payoff()
+
+
 class AfterSecondStage(AnnouncementPage):
     pointer_page = 'Task2'
+
+    def vars_for_template(self):
+        v = super().vars_for_template()
+        v['total_tasks_together'] = self.player.performance_2 + self.player.performance_1
+        return v
 
 
 class Opinion(Page):

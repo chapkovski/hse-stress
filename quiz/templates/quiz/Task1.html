@@ -2,12 +2,44 @@
 {% load otree static %}
 
 {% block title %}
-    <div class="text-info"><h5>
-        Задание <span id="cur_task_num">{{ player.cur_task_num }}</span> из {{ player.total_tasks }}  </h5></div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+    <div id="app">
+        <transition
+                name="custom-classes-transition"
+                enter-active-class="animate__animated animate__pulse"
+                leave-active-class="animate__animated animate__bounceOutRight"
+                appear
+                mode="out-in"
+        >
+            <div class="alert alert-info  my-3 text-center" :key='cur_task_num' v-if="cur_task_num!==null">
+                <h5>
+                    Задание <span id="cur_task_num"> [[cur_task_num]]</span> из [[total_tasks]]
+                </h5>
+
+            </div>
+
+        </transition>
+    </div>
+    <script>
+        window.vueApp = new Vue({
+            el: "#app",
+            delimiters: ['[[', ']]'],
+            data: {
+                cur_task_num: {{ player.cur_task_num }},
+                total_tasks: {{ player.total_tasks }},
+                eventListenerValue: '',
+            }
+        });
+    </script>
+
+
 
 {% endblock %}
 
 {% block content %}
+
+
     <div class="alert alert-warning  text-center d-none " id="wrong_answer">
         <h6>Неправильный ответ! Попробуйте снова!</h6>
     </div>
@@ -16,11 +48,7 @@
             Внимание! Это тренировочный раунд! Решенные задания не оплачиваются!
         </div>
     {% endif %}
-    {% if session.is_demo %}
-        <div class="alert alert-danger font-weight-bold ">
-            DEBUG. Correct answer: <span id="correct_answer"></span>
-        </div>
-    {% endif %}
+
     {% if session.config.stress|default_if_none:False and name == 'Task2' %}
 
         {% include 'quiz/includes/stress_block.html' %}
@@ -51,6 +79,7 @@
             const game_over = js_vars['game_over'];
             const sec_before_end_warning = js_vars['sec_before_end_warning']
             $(() => {
+
                 var currentDate = new Date();
                 var remainingTimeoutSeconds = js_vars['time_till_end'];
                 var milliseconds = Math.floor(remainingTimeoutSeconds * 1000);
@@ -98,6 +127,11 @@
             </div>
         </div>
     </div>
+    {% if session.is_demo %}
+        <div class="alert alert-danger font-weight-bold ">
+            DEBUG. Correct answer: <span id="correct_answer"></span>
+        </div>
+    {% endif %}
     <script>
         const $answer_input = $('#answer_num');
         const $wrong_answer_div = $('#wrong_answer');
@@ -134,6 +168,10 @@
                 $('#form').submit()
             }
             $('#cur_task_num').html(cur_task_num || '')
+
+            vueApp.cur_task_num = cur_task_num
+
+
             $('#item_to_count').html(item_to_check || '0')
             $('#body').html(body || '')
 

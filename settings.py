@@ -43,14 +43,14 @@ LANGUAGE_CODE = 'ru'
 
 # e.g. EUR, GBP, CNY, JPY
 REAL_WORLD_CURRENCY_CODE = 'USD'
-USE_POINTS = True
+USE_POINTS = False
 
 ROOMS = []
 
 ADMIN_USERNAME = 'admin'
 # for security, best to set admin password in an environment variable
 ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
-
+REAL_WORLD_CURRENCY_DECIMAL_PLACES = 2
 DEMO_PAGE_INTRO_HTML = """ """
 
 SECRET_KEY = 'w^ww##qzlm)kv=zz*y_re8)f-drx3f12e=35mkncqi@xcrxf0d'
