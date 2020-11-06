@@ -101,7 +101,8 @@
     <script>
         const $answer_input = $('#answer_num')
         const $wrong_answer_div = $('#wrong_answer')
-        let currentId, item_to_check, body, no_tasks_left, cur_task_num, show_reminder, wrong_answer;
+        const $correct_answer_div = $('#correct_answer')
+        let currentId, item_to_check, body, no_tasks_left, cur_task_num, show_reminder, wrong_answer, correct_answer;
         $(() => {
             $answer_input.focus();
             liveSend({handshake: true, page: js_vars['name']})
@@ -109,7 +110,8 @@
         })
         const liveRecv = (data) => {
             console.debug('received a message!', data);
-            ({id: currentId, item_to_check, body, no_tasks_left, cur_task_num, show_reminder, wrong_answer} = data);
+            ({id: currentId, item_to_check, body, no_tasks_left, cur_task_num, show_reminder, wrong_answer,correct_answer} = data);
+            $correct_answer_div.html(correct_answer||'';)
             if (wrong_answer) {
                 $wrong_answer_div.removeClass('d-none')
             } else {
