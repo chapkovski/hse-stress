@@ -238,6 +238,7 @@ class Player(BasePlayer):
 
     def set_payoff(self):
         self.player.payoff = (self.performance_1 + self.performance_2) * Constants.fee
+        self.player.payoff = random.choice([self.performance_1 , self.performance_2]) * Constants.fee
 
     age = models.IntegerField(min=18, max=101, label=' Сколько Вам <b>лет</b>?')
     gender = models.StringField(label='Укажите Ваш пол?',
