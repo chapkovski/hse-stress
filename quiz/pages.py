@@ -127,7 +127,9 @@ class Task2(TaskPage):
                     sec_before_end_warning=sec_before
                     )
 
-
+    def before_next_page(self):
+        super().before_next_page()
+        self.player.set_payoff()
 class AfterSecondStage(AnnouncementPage):
     pointer_page = 'Task2'
 

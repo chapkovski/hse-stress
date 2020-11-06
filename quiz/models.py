@@ -26,7 +26,6 @@ Stress-related study by Hennig-Schmidt, Chapkovski, Kartavtseva
 """
 
 
-
 class Constants(BaseConstants):
     secs_for_first_tasks = 20
     name_in_url = 'quiz'
@@ -43,9 +42,11 @@ class Constants(BaseConstants):
     task_len = 100
     num_rows = 10
     max_time_for_tasks = 600
+    fee = c(20)
     assert task_len % num_rows == 0
     with open(r'./data/qs.yaml') as file:
         qs = yaml.load(file, Loader=yaml.FullLoader)
+
 
 def chunks(l, n):
     """Yield n number of striped chunks from l."""
@@ -234,6 +235,9 @@ class Player(BasePlayer):
             except AttributeError:
                 print("FAIL")
         return r
+
+    def set_payoff(self):
+        self.player.payoff = (self.performance_1 + self.performance_2) * Constants.fee
 
     age = models.IntegerField(min=18, max=101, label=' Сколько Вам <b>лет</b>?')
     gender = models.StringField(label='Укажите Ваш пол?',
