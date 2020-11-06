@@ -140,7 +140,7 @@ class Instructions3(Page):
 
 page_sequence = [
 
-     Instructions3,
+     Consent,
      Instructions,
      Instructions1,
 
