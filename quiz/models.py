@@ -175,7 +175,7 @@ class Player(BasePlayer):
         qid = data.get('id')
         answer = data.get('answer')
 
-        check_for_correction = page in Constants.check_for_correction
+        check_for_correction = page in Constants.check_for_correction and not self.session.is_demo
 
         if answer and qid:
             q = Task.objects.get(id=qid)
@@ -365,7 +365,6 @@ class Player(BasePlayer):
 
     opinion1 = models.StringField(
         label='Расскажите, пожалуйста, понравилось ли Вам исследование и какие у Вас есть замечания')
-
 
 
 class Task(djmodels.Model):

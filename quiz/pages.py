@@ -31,8 +31,6 @@ class AcuteStress(Page):
     form_fields = ['acute1', 'acute2']
 
 
-
-
 class ChronicStress(Page):
     form_model = 'player'
     form_fields = ['chronic1', 'chronic2', 'chronic3', 'chronic4', 'chronic5', 'chronic6', 'chronic7',
@@ -70,7 +68,6 @@ class Task1(TaskPage):
                     show_warning=time_till_end <= self.sec_before_end_warning,
                     sec_before_end_warning=self.sec_before_end_warning
                     )
-
 
 
 class SecondStageAnnouncement(AnnouncementPage):
@@ -130,19 +127,16 @@ class Instructions1(Page):
 class Instructions2(Page):
     pass
 
+
 class Opinion(Page):
     form_model = 'player'
     form_fields = ['opinion1']
 
 
-class Instructions3(Page):
-    pass
-
 page_sequence = [
 
-     Instructions3,
-     Instructions,
-     Instructions1,
+    Instructions,
+    Instructions1,
 
     Practice,
     FirstStageAnnouncement,
@@ -157,7 +151,6 @@ page_sequence = [
     IntellAbilityResults,
     SocialEconomic,
     Opinion
-
 ]
 
- # assert set(Constants.num_tasks.keys()).issubset(set([i.__name__ for i in page_sequence]))
+# assert set(Constants.num_tasks.keys()).issubset(set([i.__name__ for i in page_sequence]))
