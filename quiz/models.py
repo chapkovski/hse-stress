@@ -26,6 +26,7 @@ Stress-related study by Hennig-Schmidt, Chapkovski, Kartavtseva
 """
 
 
+
 class Constants(BaseConstants):
     secs_for_first_tasks = 20
     name_in_url = 'quiz'
@@ -45,8 +46,6 @@ class Constants(BaseConstants):
     assert task_len % num_rows == 0
     with open(r'./data/qs.yaml') as file:
         qs = yaml.load(file, Loader=yaml.FullLoader)
-    stress_msg = 'Please hurry up!!!!'
-
 
 def chunks(l, n):
     """Yield n number of striped chunks from l."""
@@ -157,7 +156,7 @@ class Player(BasePlayer):
                     cur_task_num=self.cur_task_num(),
                     )
         if self.session.is_demo:
-            r['correct_answer'] = q.correct_answer
+            resp['correct_answer'] = q.correct_answer
         return resp
 
     def get_next_task(self, data):
@@ -176,7 +175,7 @@ class Player(BasePlayer):
         qid = data.get('id')
         answer = data.get('answer')
 
-        check_for_correction = page in Constants.check_for_correction and not self.session.is_demo
+        check_for_correction = page in Constants.check_for_correction
 
         if answer and qid:
             q = Task.objects.get(id=qid)
@@ -364,7 +363,7 @@ class Player(BasePlayer):
         choices=Constants.CHRONIC_CHOICES,
         widget=widgets.RadioSelect)
 
-    opinion1 = models.StringField(
+    opinion1 = models.LongStringField(
         label='Расскажите, пожалуйста, понравилось ли Вам исследование и какие у Вас есть замечания')
 
 

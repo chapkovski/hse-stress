@@ -2,9 +2,9 @@ from ._builtin import Page as oTreePage
 
 from datetime import datetime, timezone
 from django.db.models import Sum
-
+import json
 import logging
-
+from django.core.serializers.json import DjangoJSONEncoder
 logger = logging.getLogger(__name__)
 
 
@@ -54,7 +54,7 @@ class TaskPage(Page):
                                (f'productivity_{stage}', productivity))
             for k, v in items_to_assign:
                 setattr(self.player, k, v)
-            logger.info("ITEMS TO ASSIGN", [(str(i), str(j)) for i, j in items_to_assign])
+            logger.info(f"ITEMS TO ASSIGN: {json.dumps(items_to_assign,  cls=DjangoJSONEncoder)}")
 
 
 class AnnouncementPage(Page):

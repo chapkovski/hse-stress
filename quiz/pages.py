@@ -6,6 +6,22 @@ from .models import Constants
 from datetime import datetime, timezone, timedelta
 
 
+class Consent(Page):
+    pass
+
+
+class Instructions(Page):
+    pass
+
+
+class Instructions1(Page):
+    pass
+
+
+class Instructions2(Page):
+    pass
+
+
 class SocialEconomic(Page):
     form_model = 'player'
     form_fields = ['age', 'gender', 'education', 'education1', 'education_other', 'occupation', 'birth', 'game',
@@ -29,8 +45,6 @@ class IntellAbilityResults(Page):
 class AcuteStress(Page):
     form_model = 'player'
     form_fields = ['acute1', 'acute2']
-
-
 
 
 class ChronicStress(Page):
@@ -70,7 +84,6 @@ class Task1(TaskPage):
                     show_warning=time_till_end <= self.sec_before_end_warning,
                     sec_before_end_warning=self.sec_before_end_warning
                     )
-
 
 
 class SecondStageAnnouncement(AnnouncementPage):
@@ -119,31 +132,15 @@ class AfterSecondStage(AnnouncementPage):
     pointer_page = 'Task2'
 
 
-class Instructions(Page):
-    pass
-
-
-class Instructions1(Page):
-    pass
-
-
-class Instructions2(Page):
-    pass
-
 class Opinion(Page):
     form_model = 'player'
     form_fields = ['opinion1']
 
 
-class Instructions3(Page):
-    pass
-
 page_sequence = [
-
-     Consent,
-     Instructions,
-     Instructions1,
-
+    Consent,
+    Instructions,
+    Instructions1,
     Practice,
     FirstStageAnnouncement,
     Task1,
@@ -160,4 +157,4 @@ page_sequence = [
 
 ]
 
- # assert set(Constants.num_tasks.keys()).issubset(set([i.__name__ for i in page_sequence]))
+# assert set(Constants.num_tasks.keys()).issubset(set([i.__name__ for i in page_sequence]))
