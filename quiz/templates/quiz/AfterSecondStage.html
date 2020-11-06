@@ -11,7 +11,8 @@
         <div class="card-body">
             <h5 class="alert alert-info" class="card-title">Поздравляем! Тест окончен!</h5>
             <div  class=" p-3 mb-2 bg-light text-info" >Результаты:</div>
-            {% include 'quiz/includes/result_block.html' with correct_tasks=player.performance_2 get_time_for_tasks=player.time_spent_on_tasks_2 total_tasks=player.total_submitted_2 %}
+            {% include 'quiz/includes/result_block.html' %}
+            
 
 
         </div>
