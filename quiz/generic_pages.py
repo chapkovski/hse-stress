@@ -4,7 +4,10 @@ from datetime import datetime, timezone
 from django.db.models import Sum
 
 import logging
+
 logger = logging.getLogger(__name__)
+
+
 class Page(oTreePage):
     def get_progress(self):
         totpages = self.participant._max_page_index
@@ -35,8 +38,7 @@ class TaskPage(Page):
         page = self.__class__.__name__
         stage = page[-1]
         if not self.practice:
-            time_spent_on_tasks = self.player.tasks.filter(under_threat=False,
-                                                           answer__isnull=False, page=page). \
+            time_spent_on_tasks = self.player.tasks.filter(answer__isnull=False, page=page). \
                 aggregate(totsec=Sum('seconds_on_task'))['totsec']
 
             performance = self.player.tasks.filter(is_correct=True, page=page).count()
@@ -52,18 +54,11 @@ class TaskPage(Page):
                                (f'productivity_{stage}', productivity))
             for k, v in items_to_assign:
                 setattr(self.player, k, v)
-            logger.info("ITEMS TO ASSIGN", items_to_assign)
+            logger.info("ITEMS TO ASSIGN", [(str(i), str(j)) for i, j in items_to_assign])
 
 
 class AnnouncementPage(Page):
     pointer_page = None
 
     def vars_for_template(self):
-        total_tasks_pointer = self.player.get_total_tasks(self.pointer_page)
-        correct_tasks_pointer = self.player.get_correct_tasks(self.pointer_page)
-        get_time_for_tasks_pointer = self.player.get_time_spent_tasks(self.pointer_page)
-        return dict(correct_tasks=correct_tasks_pointer,
-                    total_tasks=total_tasks_pointer,
-                    get_time_for_tasks=get_time_for_tasks_pointer,
-                    tp=self.session.config.get('tp')
-                    )
+        return dict(tp=self.session.config.get('tp'))
