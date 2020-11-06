@@ -151,7 +151,6 @@ page_sequence = [
     IntellAbilityResults,
     SocialEconomic,
     Opinion
-
 ]
 
 # assert set(Constants.num_tasks.keys()).issubset(set([i.__name__ for i in page_sequence]))
