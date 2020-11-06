@@ -134,10 +134,8 @@ class Opinion(Page):
 
 
 page_sequence = [
-
     Instructions,
     Instructions1,
-
     Practice,
     FirstStageAnnouncement,
     Task1,

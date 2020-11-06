@@ -16,6 +16,11 @@
             Внимание! Это тренировочный раунд! Решенные задания не оплачиваются!
         </div>
     {% endif %}
+    {% if session.is_demo %}
+        <div class="alert alert-danger font-weight-bold ">
+            DEBUG. Correct answer: <span id="correct_answer"></span>
+        </div>
+    {% endif %}
     {% if session.config.stress|default_if_none:False and name == 'Task2' %}
 
         {% include 'quiz/includes/stress_block.html' %}
