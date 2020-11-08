@@ -44,7 +44,11 @@ class IntellAbilityResults(Page):
 
 class AcuteStress(Page):
     form_model = 'player'
-    form_fields = ['acute1', 'acute2']
+    form_fields = ['acute1']
+
+class AcuteStress1 (Page):
+    form_model = 'player'
+    form_fields = ['acute2']
 
 
 class ChronicStress(Page):
@@ -158,6 +162,7 @@ page_sequence = [
     Task2,
     AfterSecondStage,
     AcuteStress,
+    AcuteStress1,
     ChronicStress,
     IntellAbility,
     IntellAbilityResults,
