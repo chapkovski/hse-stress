@@ -26,7 +26,7 @@
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     Плата за 1 задание:
-                    <span class="badge badge-primary badge-pill">{{ Constants.fee|c }}</span>
+                    <span class="badge badge-primary badge-pill">{{ session.config.fee_per_task|c }}</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     Размер Вашего бонуса:
@@ -34,11 +34,11 @@
                 </li>
                  <li class="list-group-item d-flex justify-content-between align-items-center">
                     Размер Вашей фиксированной платы:
-                    <span class="badge badge-primary badge-pill"> 1 </span>
+                    <span class="badge badge-primary badge-pill"> {{ session.config.toloka_participation_fee|c }} </span>
                 </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <li class="list-group-item d-flex justify-content-between align-items-center font-weight-bold list-group-item-success">
                     Размер общей выплаты:
-                    <span class="badge badge-primary badge-pill"> {{ 1 + {{ player.payoff }} }} </span>
+                    <span class="badge badge-danger  badge-pill" style="font-size: large"> {{ player.full_payoff }} </span>
                 </li>
             </ul>
 

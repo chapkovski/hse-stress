@@ -42,7 +42,7 @@ class Constants(BaseConstants):
     task_len = 100
     num_rows = 10
     max_time_for_tasks = 600
-    fee = c(.25)
+
     assert task_len % num_rows == 0
     with open(r'./data/qs.yaml') as file:
         qs = yaml.load(file, Loader=yaml.FullLoader)
@@ -238,7 +238,10 @@ class Player(BasePlayer):
         return r
 
     def set_payoff(self):
-        self.payoff = (self.performance_1 + self.performance_2) * Constants.fee
+        self.payoff = (self.performance_1 + self.performance_2) * self.session.config.get('fee_per_task', 0.1)
+
+    def full_payoff(self):
+        return self.session.config.get('toloka_participation_fee', 0) + self.payoff.to_real_world_currency(self.session)
 
     age = models.IntegerField(min=18, max=101, label=' Сколько Вам лет?')
     gender = models.StringField(label='Укажите Ваш пол?',
@@ -253,11 +256,12 @@ class Player(BasePlayer):
                                             'Высшее образование', 'Аспирантура'],
                                    widget=widgets.RadioSelect
                                    )
-    education1 = models.StringField(label='В случае если у Вас имеется высшее образование, отметьте, пожалуйста, по какой специальности (направлению подготовки) Вы обучались?',
-                                    choices=['экономика или бизнес', 'математика или инженерия', 'естественные науки',
-                                             'медицина', 'общественные науки', 'гуманитарные науки', 'искусство',
-                                             'другое'],
-                                    widget=OtherRadioSelect(other=('другое', 'education_other')))
+    education1 = models.StringField(
+        label='В случае если у Вас имеется высшее образование, отметьте, пожалуйста, по какой специальности (направлению подготовки) Вы обучались?',
+        choices=['экономика или бизнес', 'математика или инженерия', 'естественные науки',
+                 'медицина', 'общественные науки', 'гуманитарные науки', 'искусство',
+                 'другое'],
+        widget=OtherRadioSelect(other=('другое', 'education_other')))
     education_other = models.StringField(label='', blank=True)
     birth = models.StringField(label='В какой стране и каком городе Вы родились?')
     occupation = models.StringField(
