@@ -24,8 +24,11 @@ class Instructions2(Page):
 
 class SocialEconomic(Page):
     form_model = 'player'
-    form_fields = ['age', 'gender', 'education', 'education1', 'education_other', 'occupation', 'birth', 'game',
-                   'money']
+    form_fields = [
+        # 'age', 'gender', 'education', 'education1', 'education_other', 'occupation', 'birth', 'game',
+        #            'money',
+        'testlikert1', 'testlikert2'
+    ]
 
 
 class IntellAbility(Page):
@@ -151,21 +154,21 @@ class Opinion(Page):
 
 
 page_sequence = [
-    Consent,
-    Instructions,
-    Instructions1,
-    Practice,
-    FirstStageAnnouncement,
-    Task1,
-    SecondStageAnnouncement,
-    Instructions2,
-    Task2,
-    AfterSecondStage,
-    AcuteStress,
-    AcuteStress1,
-    ChronicStress,
-    IntellAbility,
-    IntellAbilityResults,
+    # Consent,
+    # Instructions,
+    # Instructions1,
+    # Practice,
+    # FirstStageAnnouncement,
+    # Task1,
+    # SecondStageAnnouncement,
+    # Instructions2,
+    # Task2,
+    # AfterSecondStage,
+    # AcuteStress,
+    # AcuteStress1,
+    # ChronicStress,
+    # IntellAbility,
+    # IntellAbilityResults,
     SocialEconomic,
     Opinion
 

@@ -8,7 +8,7 @@ from otree.api import (
     Currency as c,
     currency_range,
 )
-from .widgets import OtherRadioSelect
+from utils.widgets import OtherRadioSelect
 import yaml
 from django.db import models as djmodels
 import logging
@@ -374,7 +374,7 @@ class Player(BasePlayer):
 
     opinion1 = models.LongStringField(
         label='Расскажите, пожалуйста, понравилось ли Вам исследование и какие у Вас есть замечания')
-
+    testlikert
 
 class Task(djmodels.Model):
     owner = djmodels.ForeignKey(to=Player, on_delete=djmodels.CASCADE, related_name="tasks")
