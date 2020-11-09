@@ -182,7 +182,11 @@ class Player(BasePlayer):
         if answer and qid:
             q = Task.objects.get(id=qid)
             q.post_time = datetime.now(timezone.utc)
-            q.seconds_on_task = (q.post_time - q.get_time)
+            if q.get_time:
+                q.seconds_on_task = (q.post_time - q.get_time)
+            else:
+                q.seconds_on_task = timedelta(seconds=0)
+                logger.warning('no time of getter is available')
             q.num_seconds_on_task = q.seconds_on_task.total_seconds()
             q.answer = int(answer)
             q.is_correct = q.correct_answer == q.answer
@@ -309,17 +313,17 @@ class Player(BasePlayer):
     test10 = models.StringField(
         label='Угадайте слово, которое стоит в алфавитном порядке между данными словами и удовлетворяет подсказке: '
               'знак - (обладание какими-либо сведениями) - знахарь')
-    acute1 = models.StringField(
+    acute1 = models.IntegerField(
         label='Оцените по шкале от 1 до 10, насколько вы были напряжены во время прохождения последних 10 заданий, испытывали ли вы стресс и волнение,'
               ' где 1 – был совершенно расслаблен, спокоен, '
               'а 10 – был максимально напряжен:',
-        choices=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+        choices=list(range(0,11)),
         widget=widgets.RadioSelect)
-    acute2 = models.StringField(
+    acute2 = models.IntegerField(
         label='Оцените по шкале от 1 до 10, насколько вы были напряжены во время прохождения первой части теста (первые 10 заданий), испытывали ли вы стресс и волнение,'
               ' где 1 – был совершенно расслаблен, спокоен, '
               'а 10 – был максимально напряжен:',
-        choices=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+        choices=list(range(0,11)),
         widget=widgets.RadioSelect)
     acute3 = models.StringField(
         label=' Оцените по шкале от 1 до 10, насколько вы были напряжены, испытывали ли стресс и волнение во время прохождения первого раунда основной части. '

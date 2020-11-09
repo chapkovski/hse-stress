@@ -5,6 +5,7 @@ from django.db.models import Sum
 import json
 import logging
 from django.core.serializers.json import DjangoJSONEncoder
+
 logger = logging.getLogger(__name__)
 
 
@@ -43,7 +44,7 @@ class TaskPage(Page):
 
             performance = self.player.tasks.filter(is_correct=True, page=page).count()
             total_submitted = self.player.tasks.filter(answer__isnull=False, page=page).count()
-            if performance > 0:
+            if performance > 0 and time_spent_on_tasks.total_seconds() > 0:
                 productivity = performance / (
                         time_spent_on_tasks.total_seconds() / 60)
             else:
@@ -54,7 +55,7 @@ class TaskPage(Page):
                                (f'productivity_{stage}', productivity))
             for k, v in items_to_assign:
                 setattr(self.player, k, v)
-            logger.info(f"ITEMS TO ASSIGN: {json.dumps(items_to_assign,  cls=DjangoJSONEncoder)}")
+            logger.info(f"ITEMS TO ASSIGN: {json.dumps(items_to_assign, cls=DjangoJSONEncoder)}")
 
 
 class AnnouncementPage(Page):
