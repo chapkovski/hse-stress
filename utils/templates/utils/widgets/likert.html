@@ -1,0 +1,33 @@
+{% load otree %}
+<div id="likert{{ random_id }}">
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mr-2" role="group" aria-label="">
+            <button type="button" class="btn " v-for='item in range' :key="item" @click="selectVal(item)"
+            :class="[ String(item)===initialValue?'btn-primary':'btn-secondary' ]">
+                [[String(item)]]
+            </button>
+            <input type="hidden" :value='selectedVal' id="{{ widget.attrs.id }}" name="{{ widget.name }}"/>
+        </div>
+    </div>
+</div>
+<script>
+    new Vue({
+        el: '#likert{{random_id}}',
+        delimiters: ["[[", "]]"],
+        data: {
+            range:{{ range|json }},
+            selectedVal: null,
+            initialValue:{{ widget.value.0|json|default_if_none:'' }}
+        },
+        created() {
+            var self = this;
+        },
+        methods: {
+            selectVal(val) {
+                console.debug('jopa', val)
+                this.selectedVal = val;
+            }
+        }
+    });
+</script>
+
