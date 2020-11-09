@@ -164,11 +164,11 @@ page_sequence = [
     # Instructions2,
     # Task2,
     # AfterSecondStage,
-    # AcuteStress,
-    # AcuteStress1,
-    # ChronicStress,
-    # IntellAbility,
-    # IntellAbilityResults,
+    AcuteStress,
+    AcuteStress1,
+    ChronicStress,
+    IntellAbility,
+    IntellAbilityResults,
     SocialEconomic,
     Opinion
 

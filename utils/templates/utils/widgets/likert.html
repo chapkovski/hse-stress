@@ -1,9 +1,9 @@
 {% load otree %}
 <div id="likert{{ random_id }}">
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-        <div class="btn-group mr-2" role="group" aria-label="">
-            <button type="button" class="btn " v-for='item in range' :key="item" @click="selectVal(item)"
-            :class="[ String(item)===initialValue?'btn-primary':'btn-secondary' ]">
+    <div class="btn-toolbar d-flex align-items-center justify-content-center" role="toolbar" aria-label="likert">
+        <div class="btn-group mr-2" role="group" aria-label="likert">
+            <button type="button"   v-for='item in range' :key="item" @click="selectVal(item)"
+                    :class="classFun(item)">
                 [[String(item)]]
             </button>
             <input type="hidden" :value='selectedVal' id="{{ widget.attrs.id }}" name="{{ widget.name }}"/>
@@ -21,8 +21,16 @@
         },
         created() {
             var self = this;
+
+            this.selectedVal = parseInt(this.initialValue) || ''
+
         },
+
         methods: {
+            classFun(item){
+                if (item===this.selectedVal) return 'btn btn-primary'
+                return 'btn btn-outline-info'
+            },
             selectVal(val) {
                 console.debug('jopa', val)
                 this.selectedVal = val;

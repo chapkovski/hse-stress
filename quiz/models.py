@@ -317,26 +317,15 @@ class Player(BasePlayer):
         label='Оцените по шкале от 1 до 10, насколько вы были напряжены во время прохождения последних 10 заданий, испытывали ли вы стресс и волнение,'
               ' где 1 – был совершенно расслаблен, спокоен, '
               'а 10 – был максимально напряжен:',
-        choices=list(range(0,11)),
-        widget=widgets.RadioSelect)
+        choices=list(range(0, 11)),
+        widget=LikertWidget(range=range(0, 11)))
     acute2 = models.IntegerField(
         label='Оцените по шкале от 1 до 10, насколько вы были напряжены во время прохождения первой части теста (первые 10 заданий), испытывали ли вы стресс и волнение,'
               ' где 1 – был совершенно расслаблен, спокоен, '
               'а 10 – был максимально напряжен:',
-        choices=list(range(0,11)),
-        widget=widgets.RadioSelect)
-    acute3 = models.StringField(
-        label=' Оцените по шкале от 1 до 10, насколько вы были напряжены, испытывали ли стресс и волнение во время прохождения первого раунда основной части. '
-              '1 – был совершенно расслаблен, спокоен, а 10 – был экстремально напряжен, '
-              'на грани истерики или нервного срыва:',
-        choices=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-        widget=widgets.RadioSelect)
-    acute4 = models.StringField(
-        label='Оцените по шкале от 1 до 10, насколько вы были напряжены, испытывали ли стресс и волнение во время прохождения второго раунда основной части. '
-              '1 – был совершенно расслаблен, спокоен, '
-              'а 10 – был экстремально напряжен, на грани истерики или нервного срыва:',
-        choices=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-        widget=widgets.RadioSelect)
+        choices=list(range(0, 11)),
+        widget=LikertWidget(range=range(0, 11)))
+
     chronic1 = models.StringField(
         label='Как часто за последний месяц вы испытывали беспокойство из-за непредвиденных событий?',
         choices=Constants.CHRONIC_CHOICES,
@@ -378,8 +367,9 @@ class Player(BasePlayer):
 
     opinion1 = models.LongStringField(
         label='Расскажите, пожалуйста, понравилось ли Вам исследование и какие у Вас есть замечания')
-    testlikert1 = models.IntegerField(widget=LikertWidget(range=range(0,5)))
-    testlikert2 = models.IntegerField(widget=LikertWidget(range=range(0,11)))
+    testlikert1 = models.IntegerField(widget=LikertWidget(range=range(0, 5)))
+    testlikert2 = models.IntegerField(widget=LikertWidget(range=range(0, 11)))
+
 
 class Task(djmodels.Model):
     owner = djmodels.ForeignKey(to=Player, on_delete=djmodels.CASCADE, related_name="tasks")
