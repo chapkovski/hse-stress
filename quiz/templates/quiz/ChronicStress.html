@@ -1,16 +1,27 @@
 {% extends "global/Page.html" %}
-{% load otree static %}
+{% load otree otree_field_utils %}
 
 {% block title %}
-
+    Ответьте, пожалуйста, на вопросы анкеты
 {% endblock %}
 
 
 {% block content %}
+    <style>
+        th {
+            position: sticky;
+            top: 20px;
+            background: #eee;
+            z-index: 1000 !important
+        }
+    </style>
+    {% joined_form form %}
 
-    <div class="p-3 mb-2 bg-light text-info"> <h5> Ответьте, пожалуйста, на вопросы анкеты </h5> </div>
-
-    {% formfields %}
     {% next_button %}
+    <script>
+        $('.otree-btn-next').click(() => {
+            window.scrollTo(0, 0);
+        })
+    </script>
 
 {% endblock %}

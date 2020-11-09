@@ -1,0 +1,17 @@
+{% load otree %}
+<style>
+    .joined-table .form-check-input {
+        position: relative;
+        margin-top: inherit;
+        margin-left: inherit;
+    }
+</style>
+
+
+{% for jfield in joined_fields %}
+
+    {% include 'utils/tags/joined_field.html' with jfield=jfield form=form %}
+{% endfor %}
+
+
+

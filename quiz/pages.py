@@ -26,7 +26,7 @@ class SocialEconomic(Page):
     form_model = 'player'
     form_fields = [
         'age', 'gender', 'education', 'education1', 'education_other', 'occupation', 'birth', 'game',
-                   'money',
+        'money',
 
     ]
 
@@ -49,7 +49,8 @@ class AcuteStress(Page):
     form_model = 'player'
     form_fields = ['acute1']
 
-class AcuteStress1 (Page):
+
+class AcuteStress1(Page):
     form_model = 'player'
     form_fields = ['acute2']
 
@@ -58,6 +59,9 @@ class ChronicStress(Page):
     form_model = 'player'
     form_fields = ['chronic1', 'chronic2', 'chronic3', 'chronic4', 'chronic5', 'chronic6', 'chronic7',
                    'chronic8', 'chronic9', 'chronic10']
+    joined_fields = [{"title": '',
+                      "fields": form_fields,
+                      "choices": Constants.CHRONIC_CHOICES}]
 
 
 class IQ(Page):
