@@ -182,6 +182,7 @@ class Player(BasePlayer):
         if answer and qid:
             q = Task.objects.get(id=qid)
             q.post_time = datetime.now(timezone.utc)
+
             q.seconds_on_task = (q.post_time - q.get_time)
             q.num_seconds_on_task = q.seconds_on_task.total_seconds()
             q.answer = int(answer)
