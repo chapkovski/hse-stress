@@ -52,10 +52,42 @@ class PlayerBot(Bot):
         self.call_method(Task2)
         yield Submission(Task2, check_html=False)
         yield AfterSecondStage,
-        yield AcuteStress, {'acute1': random.choice(list(range(0,11)))}
-        yield AcuteStress1,{'acute2': random.choice(list(range(0,11)))}
-        yield ChronicStress,
-        yield IntellAbility,
+        yield AcuteStress, {'acute1': random.choice(list(range(0, 11)))}
+        yield AcuteStress1, {'acute2': random.choice(list(range(0, 11)))}
+        choices = Constants.CHRONIC_CHOICES
+        chronics = ChronicStress.form_fields
+        answer = {k: random.choice(choices) for k in chronics}
+        yield ChronicStress, answer
+        correct_answers = Constants.qs.copy()
+
+        for k, v in correct_answers.items():
+            j = self.player._meta.get_field(k)
+            choices = j.choices
+            if choices:
+                choice = random.choice(choices)[0]
+
+            r = random.random()
+            if r < 0.5:
+                if choices:
+                    correct_answers[k] = choice
+                else:
+                    correct_answers[k] = 'aaaaa'
+            else:
+                correct_answers[k] = correct_answers[k]['correct_answer']
+        yield IntellAbility, correct_answers
         yield IntellAbilityResults,
-        yield SocialEconomic,
-        yield Opinion,
+        fields = ['age', 'gender', 'education', 'education1', 'education_other', 'occupation', 'birth', 'game',
+                  'money']
+        answer = {}
+        for f in fields:
+            j = self.player._meta.get_field(f)
+            choices = j.choices
+            if choices:
+                choice = random.choice(choices)[0]
+            else:
+                choice = 'asdf'
+            answer[f] = choice
+        answer['age'] = random.randint(18, 100)
+        yield SocialEconomic, answer
+        yield Opinion, {'opinion1':'asdf'}
+

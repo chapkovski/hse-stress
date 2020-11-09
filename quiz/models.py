@@ -182,8 +182,11 @@ class Player(BasePlayer):
         if answer and qid:
             q = Task.objects.get(id=qid)
             q.post_time = datetime.now(timezone.utc)
-
-            q.seconds_on_task = (q.post_time - q.get_time)
+            if q.get_time:
+                q.seconds_on_task = (q.post_time - q.get_time)
+            else:
+                q.seconds_on_task = timedelta(seconds=0)
+                logger.warning('no time of getter is available')
             q.num_seconds_on_task = q.seconds_on_task.total_seconds()
             q.answer = int(answer)
             q.is_correct = q.correct_answer == q.answer
