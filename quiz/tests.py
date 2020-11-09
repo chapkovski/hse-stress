@@ -8,10 +8,14 @@ import random
 def mymethd(method, **kwargs):
     p = kwargs.get('player')
     page = kwargs.get('page_class').__name__
+    correct_only=  page=='Practice'
     tasks = p.tasks.filter(page=page, answer__isnull=True)
     method(p.id_in_group, {"handshake": True})
     for t in tasks:
-        answer = random.choice([str(t.correct_answer), random.randint(0, 100)])
+        if correct_only:
+            answer = str(t.correct_answer)
+        else:
+            answer = random.choice([str(t.correct_answer), random.randint(0, 100)])
         method(p.id_in_group, {"id": t.id, 'answer':answer})
 
 class PlayerBot(Bot):
@@ -34,6 +38,8 @@ class PlayerBot(Bot):
             player=self.player
         )
     def play_round(self):
+        self.call_method(pages.Practice)
+        yield Submission(pages.Practice, check_html=False)
         self.call_method(pages.Task1)
         yield Submission(pages.Task1, check_html=False)
         self.call_method(pages.Task2)
