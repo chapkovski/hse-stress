@@ -40,12 +40,11 @@ class LikertWidget(forms.RadioSelect):
 
     def __init__(self, range, *args, **kwargs):
         self.range = range
-        print('INININIT ARGS', args, 'KWARGS', kwargs)
         super().__init__(*args, **kwargs)
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
-        print('returned contet', context)
+
         context.update(dict(range=list(self.range),
                             random_id=get_random_string(10)
                             )

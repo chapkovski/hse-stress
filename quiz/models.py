@@ -8,7 +8,8 @@ from otree.api import (
     Currency as c,
     currency_range,
 )
-from utils.widgets import OtherRadioSelect, LikertWidget
+from utils.widgets import  LikertWidget
+from .widgets import  OtherRadioSelect
 import yaml
 from django.db import models as djmodels
 import logging
@@ -367,8 +368,6 @@ class Player(BasePlayer):
 
     opinion1 = models.LongStringField(
         label='Расскажите, пожалуйста, понравилось ли Вам исследование и какие у Вас есть замечания')
-    testlikert1 = models.IntegerField(widget=LikertWidget(range=range(0, 5)))
-    testlikert2 = models.IntegerField(widget=LikertWidget(range=range(0, 11)))
 
 
 class Task(djmodels.Model):
