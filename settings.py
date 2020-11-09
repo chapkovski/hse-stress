@@ -39,6 +39,7 @@ SESSION_CONFIG_DEFAULTS = dict(
     doc="",
     toloka_participation_fee=1.00,
     fee_per_task=0.10,
+    use_browser_bots=False,
 )
 
 # ISO-639 code
