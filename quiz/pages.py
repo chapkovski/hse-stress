@@ -151,23 +151,23 @@ class Opinion(Page):
 
 
 page_sequence = [
-    # Consent,
-    # Instructions,
-    # Instructions1,
+    Consent,
+    Instructions,
+    Instructions1,
     Practice,
-    # FirstStageAnnouncement,
+    FirstStageAnnouncement,
     Task1,
-    # SecondStageAnnouncement,
-    # Instructions2,
+    SecondStageAnnouncement,
+    Instructions2,
     Task2,
-    # AfterSecondStage,
-    # AcuteStress,
-    # AcuteStress1,
-    # ChronicStress,
-    # IntellAbility,
-    # IntellAbilityResults,
-    # SocialEconomic,
-    # Opinion
+    AfterSecondStage,
+    AcuteStress,
+    AcuteStress1,
+    ChronicStress,
+    IntellAbility,
+    IntellAbilityResults,
+    SocialEconomic,
+    Opinion
 
 ]
 
