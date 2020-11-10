@@ -62,7 +62,8 @@ class ChronicStress(Page):
     joined_fields = [{"title": '',
                       "fields": form_fields,
                       "choices": Constants.CHRONIC_CHOICES}]
-
+    def before_next_page(self):
+        self.player.set_chronic_index()
 
 class IQ(Page):
     pass

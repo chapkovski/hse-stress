@@ -56,7 +56,7 @@ class PlayerBot(Bot):
         yield AcuteStress1, {'acute2': random.choice(list(range(0, 11)))}
         choices = Constants.CHRONIC_CHOICES
         chronics = ChronicStress.form_fields
-        answer = {k: random.choice(choices) for k in chronics}
+        answer = {k: random.choice(choices)[0] for k in chronics}
         yield ChronicStress, answer
         correct_answers = Constants.qs.copy()
 

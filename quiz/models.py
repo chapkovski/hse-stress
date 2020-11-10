@@ -8,8 +8,8 @@ from otree.api import (
     Currency as c,
     currency_range,
 )
-from utils.widgets import  LikertWidget
-from .widgets import  OtherRadioSelect
+from utils.widgets import LikertWidget
+from .widgets import OtherRadioSelect
 import yaml
 from django.db import models as djmodels
 import logging
@@ -32,7 +32,10 @@ class Constants(BaseConstants):
     name_in_url = 'quiz'
     players_per_group = None
     num_rounds = 1
-    CHRONIC_CHOICES = ['никогда', 'почти никогда', 'иногда', 'довольно часто', 'часто']
+    chronic_choices_texts = ['никогда', 'почти никогда', 'иногда', 'довольно часто', 'часто']
+    CHRONIC_CHOICES = [(i, j) for i, j in enumerate(chronic_choices_texts)]
+
+
     check_for_correction = ['Practice']  # list of pages where we check for correct answers
     time_pressure_coef = 0.65
     num_tasks = dict(
@@ -327,44 +330,56 @@ class Player(BasePlayer):
         choices=list(range(0, 11)),
         widget=LikertWidget(range=range(0, 11)))
 
-    chronic1 = models.StringField(
+    chronic1 = models.IntegerField(
         label='Как часто за последний месяц вы испытывали беспокойство из-за непредвиденных событий?',
         choices=Constants.CHRONIC_CHOICES,
         widget=widgets.RadioSelect)
-    chronic2 = models.StringField(
+    chronic2 = models.IntegerField(
         label='Как часто за последний месяц Вам казалось сложным контролировать важные события Вашей жизни?',
         choices=Constants.CHRONIC_CHOICES,
         widget=widgets.RadioSelect)
-    chronic3 = models.StringField(label='Как часто за последний месяц Вы испытывали нервное напряжение или стресс?',
-                                  choices=Constants.CHRONIC_CHOICES,
-                                  widget=widgets.RadioSelect)
-    chronic4 = models.StringField(
+    chronic3 = models.IntegerField(label='Как часто за последний месяц Вы испытывали нервное напряжение или стресс?',
+                                   choices=Constants.CHRONIC_CHOICES,
+                                   widget=widgets.RadioSelect)
+    chronic4 = models.IntegerField(
         label=' Как часто за последний месяц Вы чувствовали уверенность в том, что справитесь с решением ваших личных проблем?',
         choices=Constants.CHRONIC_CHOICES,
         widget=widgets.RadioSelect)
-    chronic5 = models.StringField(
+    chronic5 = models.IntegerField(
         label='Как часто за последний месяц Вы чувствовали, что все идет так, как Вы этого хотели?',
         choices=Constants.CHRONIC_CHOICES,
         widget=widgets.RadioSelect)
-    chronic6 = models.StringField(
+    chronic6 = models.IntegerField(
         label='Как часто за последний месяц Вы думали, что не можете справиться с тем, что вам нужно сделать?',
         choices=Constants.CHRONIC_CHOICES,
         widget=widgets.RadioSelect)
-    chronic7 = models.StringField(
+    chronic7 = models.IntegerField(
         label='Как часто за последний месяц Вы были в состоянии справиться с вашей раздражительностью?',
         choices=Constants.CHRONIC_CHOICES,
         widget=widgets.RadioSelect)
-    chronic8 = models.StringField(label='Как часто за последний месяц Вы чувствовали, что владеете ситуацией?',
-                                  choices=Constants.CHRONIC_CHOICES,
-                                  widget=widgets.RadioSelect)
-    chronic9 = models.StringField(
+    chronic8 = models.IntegerField(label='Как часто за последний месяц Вы чувствовали, что владеете ситуацией?',
+                                   choices=Constants.CHRONIC_CHOICES,
+                                   widget=widgets.RadioSelect)
+    chronic9 = models.IntegerField(
         label='Как часто за последний месяц Вы чувствовали раздражение из-за того, что происходящие события выходили из-под вашего контроля?',
         choices=Constants.CHRONIC_CHOICES,
         widget=widgets.RadioSelect)
-    chronic10 = models.StringField(
+    chronic10 = models.IntegerField(
         label='Как часто за последний месяц вам казалось, что накопившиеся трудности достигли такого предела, что Вы не могли их контролировать?',
         choices=Constants.CHRONIC_CHOICES,
         widget=widgets.RadioSelect)
+    chronic_index = models.IntegerField()
+
+    def set_chronic_index(self):
+        inversed = [4, 5, 7, 8]
+        fields = [f'chronic{i}' for i in range(1, 11)]
+        result = []
+        for i, j in enumerate(fields):
+            v = getattr(self, j)
+            if i in inversed:
+                v = 4 - v
+            result.append(v)
+        self.chronic_index = sum(result)
 
     opinion1 = models.LongStringField(
         label='Расскажите, пожалуйста, понравилось ли Вам исследование и какие у Вас есть замечания')
